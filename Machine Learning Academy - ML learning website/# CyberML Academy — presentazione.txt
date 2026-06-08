@@ -7,9 +7,6 @@ Invece di usare fogli di calcolo o app esterne, ho deciso di costruire questa we
 
 Mentre studiavo, avevo bisogno di un modo per rimanere motivato e avere una panoramica chiara dei progressi giornalieri. Ho voluto creare un'interfaccia con un design "cyber" (ispirato al mondo hacker) che rendesse meno pesante lo studio e più coinvolgente la gestione delle risorse.
 
-![Dashboard Preview](dashboard.png)
-![Dashboard Preview](dashboard1.png)
-
 ---
 
 È un progetto puro, senza framework pesanti:
