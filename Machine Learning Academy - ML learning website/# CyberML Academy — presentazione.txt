@@ -1,0 +1,62 @@
+# CyberML Academy — Dashboard di Studio
+
+Questo è una sorta di "bibbia" e dashboard personale per tenere traccia del mio programma di studio focalizzato su Machine Learning e Cybersecurity. 
+
+Invece di usare fogli di calcolo o app esterne, ho deciso di costruire questa web-dashboard per visualizzare il mio curriculum, tenere a portata di mano i miei strumenti ("Arsenal") e consultare le guide di studio man mano che le completo.
+
+
+Mentre studiavo, avevo bisogno di un modo per rimanere motivato e avere una panoramica chiara dei progressi giornalieri. Ho voluto creare un'interfaccia con un design "cyber" (ispirato al mondo hacker) che rendesse meno pesante lo studio e più coinvolgente la gestione delle risorse.
+
+![Dashboard Preview](dashboard.png)
+![Dashboard Preview](dashboard1.png)
+
+---
+
+È un progetto puro, senza framework pesanti:
+* **HTML5:** Struttura della pagina.
+* **CSS3:** Design "dark mode" con variabili personalizzate per un look moderno e futuristico.
+* **Vanilla JavaScript:** Per la logica di rendering dinamico (caricamento delle card, filtri delle guide, gestione delle animazioni).
+
+
+Questo progetto è nato anche grazie alla collaborazione con l'Intelligenza Artificiale. Non ho scritto ogni riga di codice da zero, ma ho utilizzato tecniche di **prompt engineering** per strutturare la logica e perfezionare il design.
+
+Nello specifico, ho lavorato in sinergia con diversi modelli e strumenti:
+* **Gemini:** Per la pianificazione della struttura e il debug dei blocchi JavaScript.
+* **Claude:** Per rifinire il foglio di stile CSS e rendere l'interfaccia più pulita e coerente.
+* **Antigravity:** Utilizzato per l'automazione e il supporto alla gestione di script specifici durante la fase di sviluppo.
+
+Questa "co-creazione" con l'IA mi ha permesso di imparare molto più velocemente, trasformando i miei dubbi tecnici in soluzioni funzionanti in tempi molto brevi.
+
+---
+
+Funzionalità principali
+
+* **Curriculum Tracker:** Una roadmap divisa in moduli per monitorare il completamento delle attività quotidiane.
+* **Arsenal:** Una sezione dedicata agli strumenti (tool) che sto imparando a usare durante il corso.
+* **Guide dinamiche:** Un sistema di card filtrabili per livello, che mi permette di trovare subito i tutorial o gli appunti di cui ho bisogno.
+* **Progress Bar:** Un sistema che aggiorna visivamente i progressi settimanali man mano che avanzo.
+
+---
+
+Come usarlo
+
+Essendo un progetto frontend statico, non c'è bisogno di server complessi.
+
+1. Clonare il repository sul computer.
+2. Aprire il file `index.html` direttamente col browser (Chrome, Firefox, ecc.).
+3. per modificarlo, ti basta aprire il codice e aggiungere i nuovi elementi negli array JavaScript (o aggiornare il curriculum nel file HTML).
+
+---
+
+Design & UI
+Ho puntato su uno stile "void/dark" per ridurre l'affaticamento visivo durante le lunghe sessioni di studio notturne, utilizzando palette di colori neon (blu, viola, ciano) per distinguere le diverse sezioni della dashboard.
+
+---
+
+Prossimi passi
+Sto continuando a perfezionare la dashboard aggiungendo:
+* [ ] LocalStorage per salvare i progressi anche dopo aver chiuso il browser.
+* [ ] Una modalità "Focus" per bloccare le distrazioni.
+* [ ] Integrazione di nuove guide man mano che scopro risorse utili.
+
+*Progetto realizzato a scopo di apprendimento personale.*
