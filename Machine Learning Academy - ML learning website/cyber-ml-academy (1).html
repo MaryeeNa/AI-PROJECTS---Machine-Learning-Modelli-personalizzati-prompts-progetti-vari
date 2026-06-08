@@ -1,0 +1,3160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberML Academy — 30-Day Intensive Program</title>
+<style>
+  /* ============================================================
+     CSS VARIABLES & RESET
+  ============================================================ */
+  :root {
+    --bg-void:        #030508;
+    --bg-deep:        #070b12;
+    --bg-surface:     #0d1420;
+    --bg-card:        #101828;
+    --bg-card-hover:  #141f30;
+    --border:         #1a2a40;
+    --border-glow:    #1e3a5f;
+
+    --neon-blue:      #00c8ff;
+    --neon-violet:    #7c3aed;
+    --neon-cyan:      #06ffd4;
+    --neon-pink:      #ff2d78;
+    --accent-blue:    #0ea5e9;
+    --accent-violet:  #8b5cf6;
+
+    --text-primary:   #e8f4ff;
+    --text-secondary: #7a9bb8;
+    --text-muted:     #3d5a73;
+    --text-code:      #a5f3fc;
+
+    --font-display:   'Courier New', 'Lucida Console', monospace;
+    --font-body:      'Segoe UI', 'Helvetica Neue', sans-serif;
+    --font-mono:      'Courier New', monospace;
+
+    --radius-sm:      4px;
+    --radius-md:      8px;
+    --radius-lg:      12px;
+
+    --transition:     0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --glow-blue:      0 0 20px rgba(0, 200, 255, 0.3);
+    --glow-violet:    0 0 20px rgba(124, 58, 237, 0.3);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ============================================================
+     SCROLLBAR
+  ============================================================ */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--neon-violet); border-radius: 3px; }
+
+  /* ============================================================
+     BACKGROUND GRID
+  ============================================================ */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ============================================================
+     NAV
+  ============================================================ */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(3, 5, 8, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--neon-blue);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--neon-violet); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color var(--transition);
+  }
+
+  .nav-links a:hover { color: var(--neon-blue); }
+
+  /* ============================================================
+     HERO
+  ============================================================ */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+  }
+
+  .hero-orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,200,255,0.12) 0%, transparent 70%);
+    top: -100px; left: -100px;
+  }
+
+  .hero-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+    bottom: 0; right: -100px;
+  }
+
+  .hero-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--neon-cyan);
+    border: 1px solid rgba(6,255,212,0.3);
+    background: rgba(6,255,212,0.05);
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    display: inline-block;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    max-width: 900px;
+  }
+
+  .hero-title .gradient-text {
+    background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-violet) 50%, var(--neon-pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 620px;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-item {
+    text-align: center;
+    position: relative;
+  }
+
+  .stat-item::after {
+    content: '';
+    position: absolute;
+    right: -1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  .stat-item:last-child::after { display: none; }
+
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-blue), var(--accent-violet));
+    color: #000;
+    padding: 14px 32px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition);
+    box-shadow: 0 0 30px rgba(0,200,255,0.2);
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px rgba(0,200,255,0.4);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    padding: 14px 32px;
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition);
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: var(--glow-blue);
+  }
+
+  /* Scan line animation on hero */
+  .hero-scan {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+    opacity: 0.4;
+    animation: scanLine 4s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scanLine {
+    0%   { top: 0; }
+    100% { top: 100%; }
+  }
+
+  /* ============================================================
+     SECTION SHARED
+  ============================================================ */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--neon-violet);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+    max-width: 540px;
+    font-size: 0.95rem;
+  }
+
+  /* ============================================================
+     GLOBAL PROGRESS BAR
+  ============================================================ */
+  .progress-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,200,255,0.03) 0%, rgba(124,58,237,0.03) 100%);
+    pointer-events: none;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .progress-label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+  }
+
+  .progress-percent {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+  }
+
+  .progress-bar-track {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-card);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet));
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px; height: 12px;
+    background: var(--neon-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--neon-blue);
+  }
+
+  .progress-sub {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .progress-chip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .progress-chip span { color: var(--neon-cyan); }
+
+  /* ============================================================
+     CURRICULUM WEEKS
+  ============================================================ */
+  #curriculum { background: var(--bg-deep); }
+
+  .weeks-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .week-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition);
+  }
+
+  .week-block:hover { border-color: var(--border-glow); }
+
+  .week-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .week-num {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    min-width: 3rem;
+  }
+
+  .week-1 .week-num { color: var(--neon-blue); }
+  .week-2 .week-num { color: var(--neon-violet); }
+  .week-3 .week-num { color: var(--neon-cyan); }
+  .week-4 .week-num { color: var(--neon-pink); }
+
+  .week-info { flex: 1; }
+
+  .week-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  .week-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .week-progress-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 80px;
+  }
+
+  .week-mini-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .week-mini-bar {
+    width: 80px;
+    height: 4px;
+    background: var(--bg-card);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .week-mini-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .days-list {
+    padding: 1rem 1.5rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  /* ============================================================
+     DAY CARD (ACCORDION)
+  ============================================================ */
+  .day-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all var(--transition);
+  }
+
+  .day-card.completed { border-color: rgba(6,255,212,0.2); }
+  .day-card.completed .day-header-bar { background: rgba(6,255,212,0.04); }
+
+  .day-card:hover { border-color: var(--border-glow); }
+
+  .day-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background var(--transition);
+  }
+
+  .day-header-bar:hover { background: var(--bg-card-hover); }
+
+  .day-checkbox {
+    width: 18px; height: 18px;
+    border: 1px solid var(--text-muted);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--transition);
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .day-checkbox.checked {
+    background: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 8px rgba(6,255,212,0.4);
+  }
+
+  .day-checkbox svg { width: 11px; height: 11px; }
+
+  .day-num {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    min-width: 40px;
+    letter-spacing: 0.05em;
+  }
+
+  .day-name {
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .day-card.completed .day-name {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    text-decoration-color: var(--text-muted);
+  }
+
+  .day-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tag-theory   { background: rgba(14,165,233,0.12); color: var(--accent-blue); border: 1px solid rgba(14,165,233,0.2); }
+  .tag-lab      { background: rgba(124,58,237,0.12); color: var(--accent-violet); border: 1px solid rgba(124,58,237,0.2); }
+  .tag-project  { background: rgba(255,45,120,0.12); color: var(--neon-pink); border: 1px solid rgba(255,45,120,0.2); }
+  .tag-review   { background: rgba(6,255,212,0.08); color: var(--neon-cyan); border: 1px solid rgba(6,255,212,0.2); }
+
+  .day-toggle {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    transition: transform var(--transition);
+    flex-shrink: 0;
+  }
+
+  .day-card.open .day-toggle { transform: rotate(180deg); }
+
+  .day-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .day-card.open .day-body { max-height: 400px; }
+
+  .day-body-inner {
+    padding: 0 1rem 1rem 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+    padding-top: 1rem;
+  }
+
+  .day-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 0.75rem;
+  }
+
+  .day-resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .res-link {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--neon-blue);
+    border: 1px solid rgba(0,200,255,0.2);
+    background: rgba(0,200,255,0.05);
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all var(--transition);
+    letter-spacing: 0.03em;
+  }
+
+  .res-link:hover {
+    background: rgba(0,200,255,0.12);
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0,200,255,0.15);
+  }
+
+  /* ============================================================
+     ARSENAL SECTION
+  ============================================================ */
+  #arsenal { background: var(--bg-void); }
+
+  .arsenal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .tool-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-decoration: none;
+    transition: all var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .tool-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .tool-card:hover::before { opacity: 1; }
+
+  .tool-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  .tool-name {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  .tool-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .tool-cat {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--neon-violet);
+    margin-top: auto;
+  }
+
+  /* ============================================================
+     FOOTER
+  ============================================================ */
+  footer {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  footer span { color: var(--neon-blue); }
+
+  /* ============================================================
+     FADE-IN ANIMATION (IntersectionObserver)
+  ============================================================ */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger delays */
+  .fade-in:nth-child(1) { transition-delay: 0.05s; }
+  .fade-in:nth-child(2) { transition-delay: 0.1s; }
+  .fade-in:nth-child(3) { transition-delay: 0.15s; }
+  .fade-in:nth-child(4) { transition-delay: 0.2s; }
+  .fade-in:nth-child(5) { transition-delay: 0.25s; }
+  .fade-in:nth-child(6) { transition-delay: 0.3s; }
+  .fade-in:nth-child(7) { transition-delay: 0.35s; }
+  .fade-in:nth-child(8) { transition-delay: 0.4s; }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+    .stat-item::after { display: none; }
+    .week-header { flex-wrap: wrap; gap: 0.75rem; }
+    .week-progress-mini { display: none; }
+    .arsenal-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    .progress-panel { padding: 1rem 1.25rem; }
+  }
+
+  /* ============================================================
+     GLITCH EFFECT (decorative on title)
+  ============================================================ */
+  @keyframes glitch-clip {
+    0%  { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 0); }
+    20% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 0); }
+    40% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, 0); }
+    60% { clip-path: inset(80% 0 5% 0);  transform: translate(2px, 0); }
+    80% { clip-path: inset(5% 0 75% 0);  transform: translate(-2px, 0); }
+    100%{ clip-path: inset(90% 0 0% 0);  transform: translate(0); }
+  }
+
+  /* Cursor blink on monospace contexts */
+  .cursor-blink::after {
+    content: '_';
+    animation: blink 1s step-end infinite;
+    color: var(--neon-blue);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* ============================================================
+     TERMINAL BADGE
+  ============================================================ */
+  .terminal-line {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    background: var(--bg-void);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .terminal-line .term-prompt { color: var(--neon-cyan); }
+  .terminal-line .term-cmd    { color: var(--text-primary); }
+  .terminal-line .term-arg    { color: var(--neon-violet); }
+
+  /* ============================================================
+     RESET BUTTON
+  ============================================================ */
+  .reset-btn {
+    background: transparent;
+    border: 1px solid rgba(255,45,120,0.3);
+    color: var(--neon-pink);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 5px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.05em;
+  }
+
+  .reset-btn:hover {
+    background: rgba(255,45,120,0.08);
+    border-color: var(--neon-pink);
+  }
+
+  /* ============================================================
+     GUIDES SECTION
+  ============================================================ */
+  #guides { background: var(--bg-deep); }
+
+  /* Filter bar */
+  .guide-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-btn {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+  }
+
+  .filter-btn.active {
+    background: rgba(0,200,255,0.1);
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: 0 0 12px rgba(0,200,255,0.15);
+  }
+
+  /* Guide cards grid */
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .guide-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .guide-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .guide-card.hidden { display: none; }
+
+  .guide-card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .guide-card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, var(--neon-blue)), transparent);
+    opacity: 0.5;
+  }
+
+  .guide-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .guide-cat-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  .guide-cat-badge.cat-ml      { color: var(--neon-blue);   border-color: rgba(0,200,255,0.3);   background: rgba(0,200,255,0.07); }
+  .guide-cat-badge.cat-dl      { color: var(--neon-violet); border-color: rgba(124,58,237,0.3);  background: rgba(124,58,237,0.07); }
+  .guide-cat-badge.cat-security{ color: var(--neon-cyan);   border-color: rgba(6,255,212,0.3);   background: rgba(6,255,212,0.07); }
+  .guide-cat-badge.cat-mlops   { color: var(--neon-pink);   border-color: rgba(255,45,120,0.3);  background: rgba(255,45,120,0.07); }
+  .guide-cat-badge.cat-adv     { color: #f59e0b;            border-color: rgba(245,158,11,0.3);  background: rgba(245,158,11,0.07); }
+
+  .guide-difficulty {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    margin-left: auto;
+  }
+
+  .diff-beginner  { color: var(--neon-cyan); }
+  .diff-intermediate { color: #f59e0b; }
+  .diff-advanced  { color: var(--neon-pink); }
+
+  .guide-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+  }
+
+  .guide-summary {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .guide-card-footer {
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .guide-chips {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .guide-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .guide-time {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     GUIDE MODAL (full step-by-step)
+  ============================================================ */
+  .guide-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(3,5,8,0.92);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 4rem 1.5rem 2rem;
+    overflow-y: auto;
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .guide-modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .guide-modal {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 860px;
+    position: relative;
+    box-shadow: 0 0 60px rgba(0,200,255,0.08), 0 40px 80px rgba(0,0,0,0.6);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+  }
+
+  .guide-modal-overlay.open .guide-modal {
+    transform: translateY(0);
+  }
+
+  .guide-modal-top {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .guide-modal-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 1rem;
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .guide-modal-close:hover {
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+  }
+
+  .guide-modal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    padding-right: 3rem;
+  }
+
+  .guide-modal-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .guide-modal-body {
+    padding: 2rem 2.5rem;
+  }
+
+  /* Progress indicator inside modal */
+  .step-progress {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .step-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .step-dot-circle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    transition: all var(--transition);
+    cursor: pointer;
+  }
+
+  .step-dot.active .step-dot-circle {
+    border-color: var(--neon-blue);
+    background: rgba(0,200,255,0.12);
+    color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0,200,255,0.3);
+  }
+
+  .step-dot.done .step-dot-circle {
+    border-color: var(--neon-cyan);
+    background: rgba(6,255,212,0.15);
+    color: var(--neon-cyan);
+  }
+
+  .step-dot-label {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 52px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .step-dot.active .step-dot-label { color: var(--neon-blue); }
+
+  .step-connector {
+    height: 1.5px;
+    flex: 1;
+    min-width: 20px;
+    background: var(--border);
+    margin-bottom: 18px;
+    transition: background 0.3s ease;
+  }
+
+  .step-connector.done { background: var(--neon-cyan); }
+
+  /* Step content */
+  .step-content {
+    display: none;
+    animation: stepFadeIn 0.3s ease;
+  }
+
+  .step-content.active { display: block; }
+
+  @keyframes stepFadeIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .step-num-badge {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    background: rgba(0,200,255,0.1);
+    border: 1px solid rgba(0,200,255,0.25);
+    color: var(--neon-blue);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .step-desc strong { color: var(--text-primary); }
+
+  /* Code block inside guide */
+  .code-block {
+    background: var(--bg-void);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: rgba(0,200,255,0.04);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-lang {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--neon-blue);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .code-copy-btn {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 2px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.05em;
+  }
+
+  .code-copy-btn:hover {
+    color: var(--neon-cyan);
+    border-color: rgba(6,255,212,0.4);
+  }
+
+  .code-copy-btn.copied {
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+  }
+
+  .code-block pre {
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    color: var(--text-code);
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  /* Syntax-lite colors */
+  .code-block .kw  { color: var(--neon-violet); }   /* keywords */
+  .code-block .fn  { color: var(--neon-blue); }      /* functions */
+  .code-block .str { color: #86efac; }               /* strings */
+  .code-block .cm  { color: var(--text-muted); font-style: italic; } /* comments */
+  .code-block .num { color: #fbbf24; }               /* numbers */
+  .code-block .cls { color: var(--neon-cyan); }      /* classes */
+  .code-block .imp { color: var(--neon-pink); }      /* imports */
+
+  /* Callout boxes */
+  .step-callout {
+    padding: 0.9rem 1.25rem;
+    border-radius: var(--radius-md);
+    border-left: 3px solid;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  .step-callout.info {
+    background: rgba(0,200,255,0.06);
+    border-color: var(--neon-blue);
+    color: var(--text-secondary);
+  }
+
+  .step-callout.warn {
+    background: rgba(245,158,11,0.06);
+    border-color: #f59e0b;
+    color: #fcd34d;
+  }
+
+  .step-callout.tip {
+    background: rgba(6,255,212,0.05);
+    border-color: var(--neon-cyan);
+    color: var(--text-secondary);
+  }
+
+  .step-callout .callout-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .step-callout.info .callout-label  { color: var(--neon-blue); }
+  .step-callout.warn .callout-label  { color: #f59e0b; }
+  .step-callout.tip .callout-label   { color: var(--neon-cyan); }
+
+  /* Step navigation */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1.5rem;
+    gap: 1rem;
+  }
+
+  .step-nav-btn {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .step-nav-btn:hover:not(:disabled) {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+  }
+
+  .step-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .step-nav-btn.next-btn {
+    background: rgba(0,200,255,0.08);
+    border-color: rgba(0,200,255,0.3);
+    color: var(--neon-blue);
+  }
+
+  .step-nav-btn.next-btn:hover {
+    background: rgba(0,200,255,0.15);
+    box-shadow: var(--glow-blue);
+  }
+
+  .step-nav-btn.finish-btn {
+    background: rgba(6,255,212,0.08);
+    border-color: rgba(6,255,212,0.3);
+    color: var(--neon-cyan);
+  }
+
+  .step-nav-counter {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  /* Output/result boxes inside steps */
+  .step-output {
+    background: var(--bg-void);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--neon-cyan);
+    line-height: 1.6;
+    margin: 0.75rem 0;
+    position: relative;
+  }
+
+  .step-output::before {
+    content: '// OUTPUT';
+    position: absolute;
+    top: 0.5rem; right: 0.75rem;
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Inline code */
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    color: var(--neon-cyan);
+    background: rgba(6,255,212,0.07);
+    border: 1px solid rgba(6,255,212,0.15);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* Responsive guide modal */
+  @media (max-width: 768px) {
+    .guides-grid { grid-template-columns: 1fr; }
+    .guide-modal-top { padding: 1.5rem; }
+    .guide-modal-body { padding: 1.5rem; }
+    .step-progress { gap: 0; }
+    .guide-modal-overlay { padding: 2rem 0.75rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+============================================================ -->
+<nav>
+  <a href="#hero" class="nav-logo">CYBER<span>ML</span> ACADEMY</a>
+  <ul class="nav-links">
+    <li><a href="#progress">Progress</a></li>
+    <li><a href="#curriculum">Curriculum</a></li>
+    <li><a href="#guides">Guide</a></li>
+    <li><a href="#arsenal">Arsenal</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-scan"></div>
+
+  <div class="hero-badge">▶ INTENSIVE PROGRAM — COHORT 2025</div>
+
+  <h1 class="hero-title">
+    Machine Learning<br>
+    <span class="gradient-text">for Cybersecurity</span>
+  </h1>
+
+  <p class="hero-subtitle">
+    Un percorso intensivo di 30 giorni per costruire e deployare modelli ML applicati alla sicurezza informatica. 
+    Da zero alla threat detection in un mese.
+  </p>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-number">30</span>
+      <span class="stat-label">Giorni</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">04</span>
+      <span class="stat-label">Moduli</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">120+</span>
+      <span class="stat-label">Ore Lab</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">30</span>
+      <span class="stat-label">Task</span>
+    </div>
+  </div>
+
+  <div class="cta-group">
+    <a href="#curriculum" class="btn-primary">▶ Inizia il Programma</a>
+    <a href="#guides" class="btn-secondary">Leggi le Guide</a>
+    <a href="#arsenal" class="btn-secondary">Esplora l'Arsenal</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROGRESS
+============================================================ -->
+<section id="progress">
+  <div class="section-container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// LIVE TRACKING</span>
+      <h2 class="section-title">Il tuo Progresso</h2>
+      <p class="section-desc">I task completati vengono salvati nel browser. Riprendi da dove hai lasciato.</p>
+    </div>
+
+    <div class="progress-panel fade-in">
+      <div class="progress-header">
+        <div>
+          <div class="progress-label">COMPLETAMENTO PROGRAMMA</div>
+          <div class="terminal-line" style="margin-top:6px;margin-bottom:0">
+            <span class="term-prompt">$ </span>
+            <span class="term-cmd">cyberml</span>
+            <span class="term-arg"> --status --verbose</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <div class="progress-percent" id="global-percent">0%</div>
+          <button class="reset-btn" id="reset-btn">↺ Reset Progress</button>
+        </div>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="global-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-sub">
+        <div class="progress-chip">Completati: <span id="count-done">0</span></div>
+        <div class="progress-chip">Rimanenti: <span id="count-left">30</span></div>
+        <div class="progress-chip">Streak: <span id="streak">0</span> giorni</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CURRICULUM
+============================================================ -->
+<section id="curriculum">
+  <div class="section-container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// ROADMAP — 30 GIORNI</span>
+      <h2 class="section-title">Curriculum</h2>
+      <p class="section-desc">Quattro moduli progressivi: dalle fondamenta ML fino al deployment in ambienti reali di sicurezza.</p>
+    </div>
+
+    <div class="weeks-grid" id="weeks-grid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GUIDES
+============================================================ -->
+<section id="guides">
+  <div class="section-container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// GUIDE PASSO-PASSO</span>
+      <h2 class="section-title">Project Guides</h2>
+      <p class="section-desc">Istruzioni dettagliate per costruire modelli ML completi, dalla raccolta dati al deployment.</p>
+    </div>
+
+    <div class="guide-filters fade-in" id="guide-filters">
+      <button class="filter-btn active" data-cat="all">Tutti</button>
+      <button class="filter-btn" data-cat="ml">ML Classico</button>
+      <button class="filter-btn" data-cat="dl">Deep Learning</button>
+      <button class="filter-btn" data-cat="security">Security</button>
+      <button class="filter-btn" data-cat="mlops">MLOps</button>
+      <button class="filter-btn" data-cat="adv">Adversarial</button>
+    </div>
+
+    <div class="guides-grid" id="guides-grid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE MODAL -->
+<div class="guide-modal-overlay" id="guide-modal-overlay">
+  <div class="guide-modal" id="guide-modal">
+    <div class="guide-modal-top">
+      <button class="guide-modal-close" id="guide-modal-close">✕</button>
+      <div class="guide-modal-meta" id="modal-meta"></div>
+      <h2 class="guide-modal-title" id="modal-title"></h2>
+    </div>
+    <div class="guide-modal-body">
+      <div class="step-progress" id="step-progress"></div>
+      <div id="step-contents"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ARSENAL
+============================================================ -->
+<section id="arsenal">
+  <div class="section-container">
+    <div class="section-header fade-in">
+      <span class="section-tag">// TOOLS & RESOURCES</span>
+      <h2 class="section-title">L'Arsenal</h2>
+      <p class="section-desc">Piattaforme, librerie e ambienti di lab usati nel programma.</p>
+    </div>
+    <div class="arsenal-grid" id="arsenal-grid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <div>CyberML Academy © 2025 — <span>Designed for Hackers.</span> Built with pure HTML/CSS/JS.</div>
+  <div style="margin-top:6px;color:var(--text-muted)">Progressi salvati localmente via localStorage. Nessun dato trasmesso.</div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+/* ============================================================
+   DATA MODEL
+============================================================ */
+const CURRICULUM = [
+  {
+    week: 1,
+    label: "W01",
+    title: "Fondamenta ML & Setup",
+    subtitle: "Python, Numpy, Pandas, Scikit-learn · Giorni 01–07",
+    colorClass: "week-1",
+    days: [
+      {
+        id: "d01", day: "DAY 01", name: "Setup Ambiente & Python Refresher",
+        tag: "theory",
+        desc: "Configurazione dell'ambiente di sviluppo (venv, conda, Jupyter). Ripasso di Python: comprehensions, generators, decorators. Installazione di scikit-learn, pandas, numpy.",
+        resources: [
+          { label: "Python Docs", url: "https://docs.python.org/3/" },
+          { label: "Conda Guide", url: "https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html" },
+          { label: "Jupyter Intro", url: "https://jupyter.org/documentation" }
+        ]
+      },
+      {
+        id: "d02", day: "DAY 02", name: "NumPy & Algebra Lineare per ML",
+        tag: "theory",
+        desc: "Array, broadcasting, operazioni matriciali. Fondamenti di algebra lineare: dot product, eigenvalues, SVD. Esercizi pratici su dataset sintetici.",
+        resources: [
+          { label: "NumPy Docs", url: "https://numpy.org/doc/" },
+          { label: "3Blue1Brown LA", url: "https://www.3blue1brown.com/topics/linear-algebra" }
+        ]
+      },
+      {
+        id: "d03", day: "DAY 03", name: "Pandas & Analisi Dati",
+        tag: "lab",
+        desc: "DataFrame manipulation, groupby, merge. Analisi esplorativa (EDA) su dataset di log di rete. Feature engineering base: encoding, normalizzazione.",
+        resources: [
+          { label: "Pandas Docs", url: "https://pandas.pydata.org/docs/" },
+          { label: "Kaggle Pandas", url: "https://www.kaggle.com/learn/pandas" }
+        ]
+      },
+      {
+        id: "d04", day: "DAY 04", name: "Supervised Learning I — Classificazione",
+        tag: "theory",
+        desc: "Algoritmi: Decision Tree, Random Forest, Logistic Regression. Concetti: overfitting, bias-variance tradeoff, cross-validation. Metriche: accuracy, precision, recall, F1.",
+        resources: [
+          { label: "Scikit-learn", url: "https://scikit-learn.org/stable/supervised_learning.html" },
+          { label: "StatQuest", url: "https://statquest.org/machine-learning/" }
+        ]
+      },
+      {
+        id: "d05", day: "DAY 05", name: "Lab: Classificazione Malware Statico",
+        tag: "lab",
+        desc: "Estrazione di feature PE da campioni di malware (dimensione, sezioni, importazioni). Training di un Random Forest per classificazione benigno/maligno. Analisi confusion matrix.",
+        resources: [
+          { label: "VirusTotal API", url: "https://developers.virustotal.com/" },
+          { label: "LIEF Library", url: "https://lief.quarkslab.com/doc/stable/" },
+          { label: "MalConv Paper", url: "https://arxiv.org/abs/1710.09435" }
+        ]
+      },
+      {
+        id: "d06", day: "DAY 06", name: "Unsupervised Learning — Clustering & Anomaly",
+        tag: "theory",
+        desc: "K-Means, DBSCAN, Isolation Forest, One-Class SVM. Applicazioni: network anomaly detection, clustering di comportamenti. Visualizzazione con t-SNE e UMAP.",
+        resources: [
+          { label: "UMAP Docs", url: "https://umap-learn.readthedocs.io/" },
+          { label: "Isolation Forest", url: "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html" }
+        ]
+      },
+      {
+        id: "d07", day: "DAY 07", name: "Review & Mini-Project: Network Anomaly",
+        tag: "review",
+        desc: "Applicazione dei concetti della settimana: pipeline completa su dataset KDD Cup 99. Preprocessing → Clustering → Anomaly Detection → Report. Presentazione risultati in Jupyter.",
+        resources: [
+          { label: "KDD Cup 99", url: "http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html" },
+          { label: "NSL-KDD", url: "https://www.unb.ca/cic/datasets/nsl.html" }
+        ]
+      }
+    ]
+  },
+  {
+    week: 2,
+    label: "W02",
+    title: "Deep Learning & Neural Networks",
+    subtitle: "PyTorch, CNN, LSTM, Transformers · Giorni 08–14",
+    colorClass: "week-2",
+    days: [
+      {
+        id: "d08", day: "DAY 08", name: "Intro Deep Learning & PyTorch",
+        tag: "theory",
+        desc: "Perceptron, backpropagation, gradient descent. Setup PyTorch: tensori, autograd, DataLoader. Prima rete fully-connected per classificazione binaria.",
+        resources: [
+          { label: "PyTorch Docs", url: "https://pytorch.org/docs/stable/index.html" },
+          { label: "Deep Learning Book", url: "https://www.deeplearningbook.org/" }
+        ]
+      },
+      {
+        id: "d09", day: "DAY 09", name: "CNN per Analisi Payload di Rete",
+        tag: "lab",
+        desc: "Convolutional Neural Network per classificazione di payload HTTP. Rappresentazione binaria dei payload come 'immagini'. Training su dataset ISCX.",
+        resources: [
+          { label: "ISCX Dataset", url: "https://www.unb.ca/cic/datasets/nsl.html" },
+          { label: "CNN Tutorial", url: "https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html" }
+        ]
+      },
+      {
+        id: "d10", day: "DAY 10", name: "LSTM per Analisi Sequenze di Log",
+        tag: "lab",
+        desc: "Modelli ricorrenti per dati sequenziali: LSTM, GRU. Applicazione: predizione di anomalie in sequenze di syslog. Feature engineering temporale.",
+        resources: [
+          { label: "LSTM Tutorial", url: "https://pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html" },
+          { label: "Log Anomaly Detection", url: "https://arxiv.org/abs/1907.08778" }
+        ]
+      },
+      {
+        id: "d11", day: "DAY 11", name: "Autoencoders per Anomaly Detection",
+        tag: "theory",
+        desc: "Encoder-decoder architecture. Ricostruzione e reconstruction error come segnale di anomalia. Variational Autoencoders (VAE). Applicazione a network traffic.",
+        resources: [
+          { label: "VAE Tutorial", url: "https://arxiv.org/abs/1312.6114" },
+          { label: "Anomaly Survey", url: "https://arxiv.org/abs/1901.03407" }
+        ]
+      },
+      {
+        id: "d12", day: "DAY 12", name: "Transformers & Attention per Testo",
+        tag: "theory",
+        desc: "Attention mechanism, self-attention, multi-head attention. BERT per classificazione di testo malevolo. Analisi di phishing email, domain names, e URL.",
+        resources: [
+          { label: "Attention is All You Need", url: "https://arxiv.org/abs/1706.03762" },
+          { label: "HuggingFace", url: "https://huggingface.co/docs/transformers/index" }
+        ]
+      },
+      {
+        id: "d13", day: "DAY 13", name: "Lab: Rilevamento Phishing con BERT",
+        tag: "lab",
+        desc: "Fine-tuning di un modello BERT pre-addestrato per classificazione di email di phishing. Dataset: SpamAssassin + PhishTank. Ottimizzazione hyperparameter.",
+        resources: [
+          { label: "PhishTank", url: "https://www.phishtank.com/" },
+          { label: "SpamAssassin", url: "https://spamassassin.apache.org/old/publiccorpus/" },
+          { label: "BERT Fine-tuning", url: "https://huggingface.co/docs/transformers/training" }
+        ]
+      },
+      {
+        id: "d14", day: "DAY 14", name: "Review & Benchmark: Modelli a Confronto",
+        tag: "review",
+        desc: "Confronto sistematico: ML classico vs. DL su problemi di cybersecurity. Analisi tempo di training, inferenza, interpretabilità. Documentazione risultati.",
+        resources: [
+          { label: "ML Benchmark", url: "https://paperswithcode.com/sota/network-intrusion-detection" },
+          { label: "W&B Tracking", url: "https://wandb.ai/site" }
+        ]
+      }
+    ]
+  },
+  {
+    week: 3,
+    label: "W03",
+    title: "Threat Detection & Adversarial ML",
+    subtitle: "IDS, Evasion, Adversarial Attacks · Giorni 15–21",
+    colorClass: "week-3",
+    days: [
+      {
+        id: "d15", day: "DAY 15", name: "Intrusion Detection Systems (IDS) con ML",
+        tag: "theory",
+        desc: "Architettura di un ML-based IDS: feature engineering su NetFlow, preprocessing real-time. Dataset: CIC-IDS-2018. Training pipeline produzione-grade.",
+        resources: [
+          { label: "CIC-IDS-2018", url: "https://www.unb.ca/cic/datasets/ids-2018.html" },
+          { label: "Snort Rules", url: "https://www.snort.org/downloads" }
+        ]
+      },
+      {
+        id: "d16", day: "DAY 16", name: "Lab: TryHackMe — Cyber Defense",
+        tag: "lab",
+        desc: "Hands-on su TryHackMe: percorso Cyber Defense. Analisi di alert IDS, log SIEM. Applicazione di tecniche ML su alert reali in ambiente simulato.",
+        resources: [
+          { label: "TryHackMe", url: "https://tryhackme.com/room/introtoml" },
+          { label: "THM Cyber Defense", url: "https://tryhackme.com/path/outline/cyberdefensepath" }
+        ]
+      },
+      {
+        id: "d17", day: "DAY 17", name: "Adversarial Machine Learning — Teoria",
+        tag: "theory",
+        desc: "Attacchi ai modelli ML: evasion attacks, poisoning attacks, model stealing. FGSM, PGD, C&W. Robustezza e difese: adversarial training, feature squeezing.",
+        resources: [
+          { label: "Adversarial ML", url: "https://arxiv.org/abs/1412.6572" },
+          { label: "Cleverhans", url: "https://github.com/cleverhans-lab/cleverhans" },
+          { label: "Adversarial Robustness", url: "https://robustness.readthedocs.io/" }
+        ]
+      },
+      {
+        id: "d18", day: "DAY 18", name: "Lab: Evasione di Malware Classifier",
+        tag: "lab",
+        desc: "Generazione di adversarial examples per bypassare un malware classifier. Tecniche: gradient-based perturbation su feature statiche. Valutazione robustezza del modello.",
+        resources: [
+          { label: "MAB Framework", url: "https://github.com/bfilar/malware_rl" },
+          { label: "Ember Dataset", url: "https://github.com/elastic/ember" }
+        ]
+      },
+      {
+        id: "d19", day: "DAY 19", name: "GAN per Generazione di Traffic Sintetico",
+        tag: "project",
+        desc: "Generative Adversarial Networks per data augmentation in cybersecurity. Generazione di traffico di rete sintetico per arricchire dataset sbilanciati (es. attacchi rari).",
+        resources: [
+          { label: "GAN Tutorial", url: "https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html" },
+          { label: "NetShare Paper", url: "https://arxiv.org/abs/2207.08976" }
+        ]
+      },
+      {
+        id: "d20", day: "DAY 20", name: "XAI — Explainability in Security Models",
+        tag: "theory",
+        desc: "SHAP, LIME, Integrated Gradients. Spiegabilità in contesti forensi: giustificazione di alert per SOC analyst. Regolamentazioni e compliance (GDPR, NIS2).",
+        resources: [
+          { label: "SHAP Library", url: "https://shap.readthedocs.io/" },
+          { label: "Interpretable ML Book", url: "https://christophm.github.io/interpretable-ml-book/" }
+        ]
+      },
+      {
+        id: "d21", day: "DAY 21", name: "Review & CTF Challenge: ML in the Wild",
+        tag: "review",
+        desc: "Risoluzione di una challenge CTF che coinvolge ML: analisi di modello serializzato, pickle exploit, model inversion. OverTheWire + machine learning CTF track.",
+        resources: [
+          { label: "OverTheWire", url: "https://overthewire.org/" },
+          { label: "ML CTF Challenges", url: "https://ctftime.org/" },
+          { label: "MLSEC Workshop", url: "https://mlsec.io/" }
+        ]
+      }
+    ]
+  },
+  {
+    week: 4,
+    label: "W04",
+    title: "Deployment & Production",
+    subtitle: "MLOps, API, Real-time Pipeline · Giorni 22–30",
+    colorClass: "week-4",
+    days: [
+      {
+        id: "d22", day: "DAY 22", name: "MLOps Fondamentali",
+        tag: "theory",
+        desc: "CI/CD per ML pipeline. MLflow per tracking esperimenti, model registry. DVC per versioning dataset. Monitoraggio modello in produzione: data drift, model decay.",
+        resources: [
+          { label: "MLflow Docs", url: "https://mlflow.org/docs/latest/index.html" },
+          { label: "DVC", url: "https://dvc.org/doc" }
+        ]
+      },
+      {
+        id: "d23", day: "DAY 23", name: "Containerizzazione con Docker",
+        tag: "lab",
+        desc: "Dockerizzare un modello ML di malware detection. Multi-stage builds, ottimizzazione immagine. Docker Compose per stack completo: model + API + monitoring.",
+        resources: [
+          { label: "Docker Docs", url: "https://docs.docker.com/" },
+          { label: "Docker ML Best Practice", url: "https://docs.docker.com/guides/use-case/data-science/" }
+        ]
+      },
+      {
+        id: "d24", day: "DAY 24", name: "REST API con FastAPI per Inferenza",
+        tag: "lab",
+        desc: "Costruzione di una inference API: endpoint /predict per malware classification. Schema validation con Pydantic, autenticazione JWT, rate limiting, health check.",
+        resources: [
+          { label: "FastAPI Docs", url: "https://fastapi.tiangolo.com/" },
+          { label: "ONNX Runtime", url: "https://onnxruntime.ai/" }
+        ]
+      },
+      {
+        id: "d25", day: "DAY 25", name: "Real-time Processing con Kafka & Spark",
+        tag: "theory",
+        desc: "Architettura streaming per analisi traffico real-time. Apache Kafka per ingestion, Spark Streaming per processing. Pattern: Lambda architecture in security.",
+        resources: [
+          { label: "Kafka Docs", url: "https://kafka.apache.org/documentation/" },
+          { label: "Spark Streaming", url: "https://spark.apache.org/streaming/" }
+        ]
+      },
+      {
+        id: "d26", day: "DAY 26", name: "Lab: SIEM Integration & Alert Pipeline",
+        tag: "lab",
+        desc: "Integrazione del modello ML con Elasticsearch/Kibana (stack ELK). Dashboard per visualizzazione anomalie in real-time. Correlation rules automatizzate con ML.",
+        resources: [
+          { label: "Elastic SIEM", url: "https://www.elastic.co/siem" },
+          { label: "Kibana ML", url: "https://www.elastic.co/guide/en/machine-learning/current/index.html" }
+        ]
+      },
+      {
+        id: "d27", day: "DAY 27", name: "Lab: CyberChef per Feature Engineering",
+        tag: "lab",
+        desc: "CyberChef per preprocessing di indicatori di compromissione (IoC): deobfuscation, hash analysis, pattern extraction. Automazione pipeline analisi IOC con Python.",
+        resources: [
+          { label: "CyberChef", url: "https://gchq.github.io/CyberChef/" },
+          { label: "MISP Platform", url: "https://www.misp-project.org/" }
+        ]
+      },
+      {
+        id: "d28", day: "DAY 28", name: "Security Hardening del Sistema ML",
+        tag: "project",
+        desc: "Threat modeling del sistema ML deployato. Protezione contro model stealing, membership inference, data poisoning. OWASP ML Security Top 10. Pen test dell'API.",
+        resources: [
+          { label: "OWASP ML Top 10", url: "https://owasp.org/www-project-machine-learning-security-top-10/" },
+          { label: "AI Security", url: "https://atlas.mitre.org/" },
+          { label: "ROP Emporium", url: "https://ropemporium.com/" }
+        ]
+      },
+      {
+        id: "d29", day: "DAY 29", name: "Capstone Project — Costruzione",
+        tag: "project",
+        desc: "Giorno di implementazione del progetto finale: sistema completo di threat detection ML, dalla raccolta dati al deployment. Stack: Python + PyTorch + FastAPI + Docker.",
+        resources: [
+          { label: "Awesome ML Security", url: "https://github.com/RandomAdversary/Awesome-AI-Security" },
+          { label: "SecML Library", url: "https://secml.readthedocs.io/" }
+        ]
+      },
+      {
+        id: "d30", day: "DAY 30", name: "Demo Day & Program Review",
+        tag: "review",
+        desc: "Presentazione del progetto finale. Review dell'intero percorso: lessons learned, gap da colmare, prossimi step. Risorse per continuare: paper, conference, community.",
+        resources: [
+          { label: "arXiv Security", url: "https://arxiv.org/list/cs.CR/recent" },
+          { label: "IEEE S&P", url: "https://www.ieee-security.org/TC/SP2025/" },
+          { label: "DEF CON ML Village", url: "https://aivillage.org/" }
+        ]
+      }
+    ]
+  }
+];
+
+const ARSENAL_DATA = [
+  { icon: "🏴‍☠️", name: "TryHackMe",     desc: "Piattaforma gamificata per hacking etico con percorsi guidati su ML security.", cat: "Platform", url: "https://tryhackme.com/" },
+  { icon: "🗡️", name: "OverTheWire",    desc: "War games per imparare sicurezza informatica tramite CTF progressivi.", cat: "CTF", url: "https://overthewire.org/" },
+  { icon: "🔧", name: "CyberChef",      desc: "Tool browser-based per analisi, encoding, e trasformazione di dati malware.", cat: "Analysis", url: "https://gchq.github.io/CyberChef/" },
+  { icon: "💥", name: "ROP Emporium",   desc: "Sfide specializzate su Return Oriented Programming per exploit development.", cat: "Exploitation", url: "https://ropemporium.com/" },
+  { icon: "🧠", name: "HuggingFace",    desc: "Hub di modelli pre-addestrati, dataset e framework Transformers.", cat: "ML Hub", url: "https://huggingface.co/" },
+  { icon: "🔥", name: "PyTorch",        desc: "Framework deep learning per ricerca e produzione. Standard per ML security.", cat: "Framework", url: "https://pytorch.org/" },
+  { icon: "📊", name: "Weights & Biases", desc: "Experiment tracking, hyperparameter optimization, model monitoring.", cat: "MLOps", url: "https://wandb.ai/" },
+  { icon: "🦠", name: "VirusTotal",     desc: "Analisi di file e URL su 70+ antivirus engine. API per dataset building.", cat: "Threat Intel", url: "https://www.virustotal.com/" },
+  { icon: "📦", name: "MLflow",         desc: "Tracking esperimenti ML, model registry e deployment lifecycle.", cat: "MLOps", url: "https://mlflow.org/" },
+  { icon: "⚡", name: "FastAPI",        desc: "Framework Python per API performanti. Deploy modelli ML in produzione.", cat: "Backend", url: "https://fastapi.tiangolo.com/" },
+  { icon: "🐋", name: "Docker",         desc: "Containerizzazione per ambienti ML riproducibili e deployment scalabile.", cat: "Infrastructure", url: "https://www.docker.com/" },
+  { icon: "🎯", name: "MITRE ATT&CK",  desc: "Framework per modellare le tattiche e tecniche degli attaccanti.", cat: "Framework", url: "https://attack.mitre.org/" },
+  { icon: "🔬", name: "Cleverhans",     desc: "Libreria per testing avversariale e robustezza dei modelli ML.", cat: "Adversarial ML", url: "https://github.com/cleverhans-lab/cleverhans" },
+  { icon: "📈", name: "SHAP",           desc: "Explainability unificata per qualsiasi modello ML. Essenziale per forensics.", cat: "XAI", url: "https://shap.readthedocs.io/" },
+  { icon: "🔍", name: "Elastic SIEM",   desc: "SIEM enterprise per threat hunting con ML integrato.", cat: "SIEM", url: "https://www.elastic.co/siem" },
+  { icon: "🧪", name: "MLSEC.io",      desc: "Competizioni e challenge focalizzate su ML in contesti di sicurezza.", cat: "Competition", url: "https://mlsec.io/" }
+];
+
+/* ============================================================
+   STATE MANAGEMENT
+============================================================ */
+const LS_KEY = "cyberml_progress_v2";
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY)) || {};
+  } catch { return {}; }
+}
+
+function saveProgress(state) {
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+}
+
+let progress = loadProgress();
+
+/* ============================================================
+   RENDER CURRICULUM
+============================================================ */
+function tagClass(tag) {
+  const map = { theory: "tag-theory", lab: "tag-lab", project: "tag-project", review: "tag-review" };
+  return map[tag] || "tag-theory";
+}
+
+function tagLabel(tag) {
+  const map = { theory: "THEORY", lab: "LAB", project: "PROJECT", review: "REVIEW" };
+  return map[tag] || tag.toUpperCase();
+}
+
+function renderCurriculum() {
+  const container = document.getElementById("weeks-grid");
+  container.innerHTML = "";
+
+  CURRICULUM.forEach(week => {
+    const weekDone  = week.days.filter(d => progress[d.id]).length;
+    const weekTotal = week.days.length;
+    const weekPct   = Math.round((weekDone / weekTotal) * 100);
+
+    const weekEl = document.createElement("div");
+    weekEl.className = `week-block ${week.colorClass} fade-in`;
+    weekEl.innerHTML = `
+      <div class="week-header">
+        <div class="week-num">${week.label}</div>
+        <div class="week-info">
+          <div class="week-title">${week.title}</div>
+          <div class="week-subtitle">${week.subtitle}</div>
+        </div>
+        <div class="week-progress-mini">
+          <div class="week-mini-label">${weekDone}/${weekTotal}</div>
+          <div class="week-mini-bar">
+            <div class="week-mini-fill" style="width:${weekPct}%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="days-list">
+        ${week.days.map(day => renderDayCard(day)).join("")}
+      </div>
+    `;
+    container.appendChild(weekEl);
+  });
+
+  // Attach event listeners
+  document.querySelectorAll(".day-header-bar").forEach(bar => {
+    bar.addEventListener("click", (e) => {
+      const card = bar.closest(".day-card");
+      const wasOpen = card.classList.contains("open");
+      // Close all in same week
+      bar.closest(".days-list").querySelectorAll(".day-card.open").forEach(c => {
+        if (c !== card) c.classList.remove("open");
+      });
+      card.classList.toggle("open", !wasOpen);
+    });
+  });
+
+  document.querySelectorAll(".day-checkbox").forEach(cb => {
+    cb.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = cb.dataset.id;
+      progress[id] = !progress[id];
+      saveProgress(progress);
+      // Update single card visual without full re-render
+      const card = cb.closest(".day-card");
+      card.classList.toggle("completed", progress[id]);
+      cb.classList.toggle("checked", progress[id]);
+      cb.innerHTML = progress[id] ? checkIcon() : "";
+      updateGlobalProgress();
+      updateWeekProgress(cb.closest(".week-block"));
+    });
+  });
+}
+
+function renderDayCard(day) {
+  const done = !!progress[day.id];
+  const resourcesHTML = day.resources.map(r =>
+    `<a class="res-link" href="${r.url}" target="_blank" rel="noopener">${r.label} ↗</a>`
+  ).join("");
+
+  return `
+    <div class="day-card${done ? " completed" : ""}" data-id="${day.id}">
+      <div class="day-header-bar">
+        <div class="day-checkbox${done ? " checked" : ""}" data-id="${day.id}">
+          ${done ? checkIcon() : ""}
+        </div>
+        <span class="day-num">${day.day}</span>
+        <span class="day-name">${day.name}</span>
+        <span class="day-tag ${tagClass(day.tag)}">${tagLabel(day.tag)}</span>
+        <span class="day-toggle">▼</span>
+      </div>
+      <div class="day-body">
+        <div class="day-body-inner">
+          <p class="day-desc">${day.desc}</p>
+          <div class="day-resources">${resourcesHTML}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function checkIcon() {
+  return `<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 6L5 9L10 3" stroke="#030508" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+/* ============================================================
+   PROGRESS UPDATE
+============================================================ */
+function updateGlobalProgress() {
+  const total = CURRICULUM.flatMap(w => w.days).length;
+  const done  = Object.values(progress).filter(Boolean).length;
+  const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById("global-percent").textContent = pct + "%";
+  document.getElementById("global-bar").style.width = pct + "%";
+  document.getElementById("count-done").textContent = done;
+  document.getElementById("count-left").textContent = total - done;
+
+  // Streak: consecutive completed days from day 1
+  let streak = 0;
+  const allDays = CURRICULUM.flatMap(w => w.days);
+  for (const day of allDays) {
+    if (progress[day.id]) streak++;
+    else break;
+  }
+  document.getElementById("streak").textContent = streak;
+}
+
+function updateWeekProgress(weekEl) {
+  if (!weekEl) return;
+  const days = weekEl.querySelectorAll(".day-card");
+  const total = days.length;
+  const done  = Array.from(days).filter(d => d.classList.contains("completed")).length;
+  const pct   = Math.round((done / total) * 100);
+  const fill  = weekEl.querySelector(".week-mini-fill");
+  const label = weekEl.querySelector(".week-mini-label");
+  if (fill)  fill.style.width = pct + "%";
+  if (label) label.textContent = `${done}/${total}`;
+}
+
+/* ============================================================
+   RENDER ARSENAL
+============================================================ */
+function renderArsenal() {
+  const container = document.getElementById("arsenal-grid");
+  ARSENAL_DATA.forEach((tool, i) => {
+    const el = document.createElement("a");
+    el.className = "tool-card fade-in";
+    el.href = tool.url;
+    el.target = "_blank";
+    el.rel = "noopener noreferrer";
+    el.innerHTML = `
+      <div class="tool-icon">${tool.icon}</div>
+      <div class="tool-name">${tool.name}</div>
+      <div class="tool-desc">${tool.desc}</div>
+      <div class="tool-cat">${tool.cat}</div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+/* ============================================================
+   GUIDES DATA
+============================================================ */
+const GUIDES = [
+  {
+    id: "g01",
+    cat: "ml",
+    title: "Random Forest per Malware Detection",
+    summary: "Costruisci un classificatore binario su feature statiche estratte da PE files. Dal dataset grezzo al modello deployato.",
+    difficulty: "beginner",
+    diffLabel: "BEGINNER",
+    time: "~2h",
+    chips: ["scikit-learn", "pandas", "LIEF", "joblib"],
+    steps: [
+      {
+        title: "Setup & Dataset",
+        desc: `Scarica il dataset <strong>EMBER 2018</strong> (1M campioni PE, ~8GB) o usa il subset da 100k già pre-processato. Struttura il progetto:\n\n<code>malware_rf/</code> → <code>data/</code>, <code>models/</code>, <code>src/</code>, <code>notebooks/</code>`,
+        code: {
+          lang: "bash",
+          content: `<span class="kw">pip install</span> scikit-learn pandas numpy lief lightgbm joblib matplotlib seaborn
+
+<span class="cm"># Scarica subset EMBER (pre-processato)</span>
+wget https://ember.elastic.co/ember_dataset_2018_2.tar.bz2
+tar -xjf ember_dataset_2018_2.tar.bz2
+
+<span class="cm"># Struttura directory</span>
+mkdir -p malware_rf/{data,models,src,notebooks}`
+        },
+        callout: { type: "info", label: "📦 Dataset", text: "EMBER contiene feature pre-estratte (byte histogram, strings info, PE header features). Nessun file malware reale necessario." }
+      },
+      {
+        title: "Esplorazione EDA",
+        desc: `Analizza la distribuzione delle classi (label: -1 unlabeled, 0 benigno, 1 malevolo), identifica feature importanti e distribuzioni anomale. Usa <code>df.describe()</code> e correlazione di Pearson per la feature selection preliminare.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> <span class="cls">ember</span>
+<span class="imp">import</span> pandas <span class="kw">as</span> pd
+<span class="imp">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="imp">import</span> seaborn <span class="kw">as</span> sns
+
+<span class="cm"># Carica dati EMBER</span>
+X_train, y_train, X_test, y_test = <span class="fn">ember.read_vectorized_features</span>(
+    <span class="str">"./ember_dataset_2018_2"</span>,
+    feature_version=<span class="num">2</span>
+)
+
+<span class="cm"># Filtra unlabeled (-1)</span>
+train_rows = y_train != -<span class="num">1</span>
+X_train = X_train[train_rows]
+y_train = y_train[train_rows]
+
+<span class="fn">print</span>(<span class="str">f"Train: {X_train.shape}, Benigni: {(y_train==0).sum()}, Malevoli: {(y_train==1).sum()}"</span>)
+<span class="cm"># Output: Train: (600000, 2381), Benigni: 300000, Malevoli: 300000</span>`
+        },
+        output: `Train: (600000, 2381)
+Benigni:  300,000 (50.0%)
+Malevoli: 300,000 (50.0%)
+Features: 2381 (byte_hist, strings, imports, exports, section_info...)`
+      },
+      {
+        title: "Training Random Forest",
+        desc: `Addestra un <strong>Random Forest</strong> con 100 alberi e <code>class_weight='balanced'</code> per gestire eventuali sbilanciamenti. Usa <code>n_jobs=-1</code> per parallelizzare. Il training su 600k campioni richiede ~10 minuti.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">from</span> sklearn.ensemble <span class="kw">import</span> <span class="cls">RandomForestClassifier</span>
+<span class="imp">from</span> sklearn.metrics <span class="kw">import</span> classification_report, confusion_matrix
+<span class="imp">import</span> joblib
+
+<span class="cm"># Training</span>
+rf_model = <span class="cls">RandomForestClassifier</span>(
+    n_estimators=<span class="num">100</span>,
+    max_depth=<span class="num">None</span>,
+    class_weight=<span class="str">'balanced'</span>,
+    n_jobs=-<span class="num">1</span>,
+    random_state=<span class="num">42</span>
+)
+rf_model.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cm"># Valutazione</span>
+y_pred = rf_model.<span class="fn">predict</span>(X_test)
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_test, y_pred))
+
+<span class="cm"># Salva modello</span>
+joblib.<span class="fn">dump</span>(rf_model, <span class="str">'models/malware_rf.pkl'</span>)`
+        },
+        output: `              precision  recall  f1-score  support
+           0       0.98      0.97      0.98   100000
+           1       0.97      0.98      0.98   100000
+    accuracy                           0.98   200000`
+      },
+      {
+        title: "Feature Importance & SHAP",
+        desc: `Analizza quali feature guidano le predizioni. Le prime 10 feature più importanti rivelano che <strong>byte_histogram</strong>, <strong>string_entropy</strong> e <strong>import_table_features</strong> dominano. Usa SHAP per spiegazioni locali per singoli campioni.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> shap
+<span class="imp">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Feature importance globale</span>
+importances = rf_model.feature_importances_
+top_idx = np.<span class="fn">argsort</span>(importances)[::-<span class="num">1</span>][:<span class="num">20</span>]
+
+<span class="cm"># SHAP per campione singolo (TreeExplainer è veloce per RF)</span>
+explainer = shap.<span class="cls">TreeExplainer</span>(rf_model)
+sample = X_test[<span class="num">0</span>].reshape(<span class="num">1</span>, -<span class="num">1</span>)
+shap_values = explainer.<span class="fn">shap_values</span>(sample)
+
+<span class="cm"># Waterfall plot</span>
+shap.<span class="fn">waterfall_plot</span>(shap.<span class="cls">Explanation</span>(
+    values=shap_values[<span class="num">1</span>][<span class="num">0</span>],
+    base_values=explainer.expected_value[<span class="num">1</span>]
+))`
+        },
+        callout: { type: "tip", label: "💡 Pro Tip", text: "Salva il SHAP explainer separatamente con joblib per non ri-calcolarlo ogni volta. Il TreeExplainer per RF è molto più veloce di KernelExplainer." }
+      },
+      {
+        title: "Export & Deploy con FastAPI",
+        desc: `Crea un endpoint REST che accetta un file PE in input, estrae le feature tramite EMBER, e restituisce la classificazione con confidence score e le top SHAP features come spiegazione.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">from</span> fastapi <span class="kw">import</span> <span class="cls">FastAPI</span>, <span class="cls">UploadFile</span>
+<span class="imp">import</span> ember, joblib
+<span class="imp">import</span> numpy <span class="kw">as</span> np
+
+app = <span class="cls">FastAPI</span>(title=<span class="str">"Malware Detection API"</span>)
+model = joblib.<span class="fn">load</span>(<span class="str">"models/malware_rf.pkl"</span>)
+extractor = ember.<span class="cls">PEFeatureExtractor</span>(feature_version=<span class="num">2</span>)
+
+<span class="cls">@app.post</span>(<span class="str">"/predict"</span>)
+<span class="kw">async def</span> <span class="fn">predict</span>(file: <span class="cls">UploadFile</span>):
+    data = <span class="kw">await</span> file.<span class="fn">read</span>()
+    features = np.<span class="fn">array</span>(extractor.<span class="fn">feature_vector</span>(data)).reshape(<span class="num">1</span>, -<span class="num">1</span>)
+    proba = model.<span class="fn">predict_proba</span>(features)[<span class="num">0</span>]
+    label = <span class="str">"MALWARE"</span> <span class="kw">if</span> proba[<span class="num">1</span>] > <span class="num">0.5</span> <span class="kw">else</span> <span class="str">"BENIGN"</span>
+    <span class="kw">return</span> {<span class="str">"label"</span>: label, <span class="str">"confidence"</span>: <span class="fn">float</span>(proba[<span class="num">1</span>])}
+
+<span class="cm"># uvicorn main:app --reload --port 8000</span>`
+        },
+        callout: { type: "tip", label: "🚀 Next Step", text: "Dockerizza l'API con un Dockerfile multi-stage. Aggiungi autenticazione JWT e rate limiting per uso in produzione." }
+      }
+    ]
+  },
+  {
+    id: "g02",
+    cat: "dl",
+    title: "LSTM per Anomaly Detection su Logs",
+    summary: "Addestra una rete LSTM per individuare sequenze anomale in log di sistema, usando reconstruction error come segnale.",
+    difficulty: "intermediate",
+    diffLabel: "INTERMEDIATE",
+    time: "~3h",
+    chips: ["PyTorch", "pandas", "numpy", "matplotlib"],
+    steps: [
+      {
+        title: "Preparazione Log Dataset",
+        desc: `Useremo il dataset <strong>HDFS (Hadoop Distributed File System)</strong>, un benchmark per log anomaly detection con ~11M di righe di log e label a livello di sessione (normale/anomalo). Ogni sessione è una sequenza di event ID (es: E1, E5, E11...).`,
+        code: {
+          lang: "bash",
+          content: `<span class="cm"># Download HDFS dataset</span>
+wget https://zenodo.org/record/3227177/files/HDFS_1.tar.gz
+tar -xzf HDFS_1.tar.gz
+
+<span class="cm"># Install deps</span>
+<span class="kw">pip install</span> torch torchvision tqdm scikit-learn pandas`
+        },
+        callout: { type: "info", label: "📊 Dataset Stats", text: "HDFS dataset: 11,175,629 log lines, 575,061 sessioni, 16,838 anomalie (2.93%). Classico caso di dataset sbilanciato." }
+      },
+      {
+        title: "Parsing & Feature Extraction",
+        desc: `Esegui il <strong>log parsing</strong> per estrarre i template (Event ID) da ogni riga. Usa Drain3 per il parsing veloce. Raggruppa per Block ID (sessione) per ottenere sequenze di eventi.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> pandas <span class="kw">as</span> pd
+<span class="imp">import</span> re
+<span class="imp">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="cm"># Mappa evento → ID intero</span>
+EVENT_MAP = {
+    <span class="str">'081109 203518 143 INFO dfs.DataNode$PacketResponder'</span>: <span class="num">0</span>,
+    <span class="cm"># ... auto-generato dal parser</span>
+}
+
+<span class="kw">def</span> <span class="fn">parse_hdfs_logs</span>(log_file, labels_file):
+    sessions = defaultdict(<span class="fn">list</span>)
+    <span class="kw">with</span> <span class="fn">open</span>(log_file) <span class="kw">as</span> f:
+        <span class="kw">for</span> line <span class="kw">in</span> f:
+            match = re.<span class="fn">search</span>(<span class="str">r'blk_(-?\d+)'</span>, line)
+            event_id = <span class="fn">extract_event_id</span>(line)  <span class="cm"># → int 0..28</span>
+            <span class="kw">if</span> match:
+                sessions[match.<span class="fn">group</span>(<span class="num">0</span>)].<span class="fn">append</span>(event_id)
+    <span class="kw">return</span> sessions`
+        }
+      },
+      {
+        title: "Architettura LSTM Autoencoder",
+        desc: `Il modello impara a <strong>ricostruire sequenze normali</strong>. In fase di test, sequenze anomale producono un alto <em>reconstruction error</em> (MSE tra input e output). Si addestra <strong>solo su dati normali</strong>.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> torch
+<span class="imp">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="cls">LSTMAutoEncoder</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, input_dim, hidden_dim=<span class="num">64</span>, num_layers=<span class="num">2</span>):
+        <span class="fn">super</span>().__init__()
+        <span class="cm"># Encoder</span>
+        self.encoder = nn.<span class="cls">LSTM</span>(input_dim, hidden_dim,
+                                  num_layers, batch_first=<span class="cls">True</span>)
+        <span class="cm"># Decoder</span>
+        self.decoder = nn.<span class="cls">LSTM</span>(hidden_dim, hidden_dim,
+                                  num_layers, batch_first=<span class="cls">True</span>)
+        self.output_layer = nn.<span class="cls">Linear</span>(hidden_dim, input_dim)
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        _, (h, c) = self.<span class="fn">encoder</span>(x)
+        <span class="cm"># Repeat latent vector per ogni timestep</span>
+        latent = h[-<span class="num">1</span>].unsqueeze(<span class="num">1</span>).<span class="fn">repeat</span>(<span class="num">1</span>, x.size(<span class="num">1</span>), <span class="num">1</span>)
+        decoded, _ = self.<span class="fn">decoder</span>(latent)
+        <span class="kw">return</span> self.output_layer.<span class="fn">apply</span>(decoded)`
+        },
+        callout: { type: "info", label: "🧠 Architettura", text: "Input: one-hot encoding degli event ID (dim=28). Hidden: 64 neuroni. Sequenze paddinate a lunghezza fissa (window=20). Loss: MSE." }
+      },
+      {
+        title: "Training & Soglia Anomalia",
+        desc: `Addestra il modello solo su sequenze normali per 50 epoch. Poi calcola il <strong>reconstruction error threshold</strong> sul validation set (percentile 95°). Sequenze con errore > threshold → anomalia.`,
+        code: {
+          lang: "python",
+          content: `<span class="kw">def</span> <span class="fn">train_epoch</span>(model, loader, optimizer, criterion):
+    model.<span class="fn">train</span>()
+    total_loss = <span class="num">0</span>
+    <span class="kw">for</span> batch <span class="kw">in</span> loader:
+        optimizer.<span class="fn">zero_grad</span>()
+        output = model.<span class="fn">forward</span>(batch)
+        loss = criterion.<span class="fn">apply</span>(output, batch)
+        loss.<span class="fn">backward</span>()
+        optimizer.<span class="fn">step</span>()
+        total_loss += loss.<span class="fn">item</span>()
+    <span class="kw">return</span> total_loss / <span class="fn">len</span>(loader)
+
+<span class="cm"># Determina threshold sul val set</span>
+errors = []
+<span class="kw">with</span> torch.no_grad():
+    <span class="kw">for</span> seq <span class="kw">in</span> val_normal_seqs:
+        recon = model.<span class="fn">forward</span>(seq)
+        errors.<span class="fn">append</span>(<span class="fn">mse</span>(recon, seq).<span class="fn">item</span>())
+
+THRESHOLD = np.<span class="fn">percentile</span>(errors, <span class="num">95</span>)
+<span class="fn">print</span>(<span class="str">f"Anomaly threshold: {THRESHOLD:.4f}"</span>)`
+        },
+        output: `Epoch 01/50 | Loss: 0.4521
+Epoch 10/50 | Loss: 0.1834
+Epoch 50/50 | Loss: 0.0412
+Anomaly threshold: 0.1847
+Detection F1: 0.921 | Precision: 0.934 | Recall: 0.909`
+      },
+      {
+        title: "Visualizzazione & Monitoring",
+        desc: `Plotta la distribuzione dei reconstruction error per normali vs anomalie — il gap deve essere netto. Integra con Prometheus/Grafana per monitoring real-time in produzione.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cm"># Plot distribuzione errori</span>
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">10</span>, <span class="num">4</span>))
+ax.<span class="fn">hist</span>(normal_errors,   bins=<span class="num">100</span>, alpha=<span class="num">0.7</span>,
+        color=<span class="str">'#00c8ff'</span>, label=<span class="str">'Normal'</span>)
+ax.<span class="fn">hist</span>(anomaly_errors,  bins=<span class="num">100</span>, alpha=<span class="num">0.7</span>,
+        color=<span class="str">'#ff2d78'</span>, label=<span class="str">'Anomaly'</span>)
+ax.<span class="fn">axvline</span>(THRESHOLD, color=<span class="str">'#06ffd4'</span>,
+            linestyle=<span class="str">'--'</span>, label=<span class="str">f'Threshold={THRESHOLD:.3f}'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'Reconstruction Error (MSE)'</span>)
+plt.<span class="fn">legend</span>()
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">savefig</span>(<span class="str">'error_distribution.png'</span>, dpi=<span class="num">150</span>)`
+        },
+        callout: { type: "tip", label: "🚀 Next Step", text: "Esporta il modello in ONNX per inferenza più veloce (3-5x). Integra con Kafka per processing di log real-time con latenza <5ms." }
+      }
+    ]
+  },
+  {
+    id: "g03",
+    cat: "security",
+    title: "Network Intrusion Detection con XGBoost",
+    summary: "Pipeline completa su CIC-IDS-2018: da NetFlow grezzo a un IDS ad alte prestazioni con XGBoost e spiegabilità SHAP.",
+    difficulty: "intermediate",
+    diffLabel: "INTERMEDIATE",
+    time: "~2.5h",
+    chips: ["XGBoost", "scikit-learn", "SHAP", "pandas"],
+    steps: [
+      {
+        title: "CIC-IDS-2018 Dataset",
+        desc: `Il dataset CIC-IDS-2018 contiene <strong>16 tipi di attacco</strong> (DDoS, Brute Force, SQL Injection, XSS, Infiltration, Botnet) catturati in un ambiente di rete realistico. Feature estratte da NetFlow con CICFlowMeter: 83 feature per flusso.`,
+        code: {
+          lang: "bash",
+          content: `<span class="cm"># Download (Amazon S3, ~6GB totale)</span>
+<span class="cm"># URL: https://www.unb.ca/cic/datasets/ids-2018.html</span>
+<span class="kw">pip install</span> xgboost shap imbalanced-learn pandas scikit-learn
+
+<span class="cm"># I file CSV sono per giorno (02-14 Feb 2018)</span>
+ls data/
+<span class="cm"># 02-14-2018.csv  02-15-2018.csv  02-16-2018.csv ...</span>`
+        },
+        callout: { type: "warn", label: "⚠️ Class Imbalance", text: "Il dataset è fortemente sbilanciato: ~99% traffico benigno, <1% attacchi. Usa SMOTE o class_weight per gestirlo correttamente." }
+      },
+      {
+        title: "Preprocessing & Feature Engineering",
+        desc: `Concatena i CSV, rimuovi feature con alta correlazione (>0.95), gestisci i valori <code>Inf</code> e <code>NaN</code> (frequenti in feature di rate come pkt/s). Codifica il label multiclasse con <code>LabelEncoder</code>.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> pandas <span class="kw">as</span> pd
+<span class="imp">import</span> numpy <span class="kw">as</span> np
+<span class="imp">from</span> sklearn.preprocessing <span class="kw">import</span> <span class="cls">LabelEncoder</span>, <span class="cls">StandardScaler</span>
+
+df = pd.<span class="fn">concat</span>([pd.<span class="fn">read_csv</span>(f) <span class="kw">for</span> f <span class="kw">in</span> csv_files])
+
+<span class="cm"># Pulizia</span>
+df.<span class="fn">replace</span>([np.inf, -np.inf], np.nan, inplace=<span class="cls">True</span>)
+df.<span class="fn">dropna</span>(inplace=<span class="cls">True</span>)
+df.columns = df.columns.<span class="fn">str.strip</span>()
+
+<span class="cm"># Drop correlate (>0.95)</span>
+corr_matrix = df.<span class="fn">drop</span>(<span class="str">'Label'</span>, axis=<span class="num">1</span>).<span class="fn">corr</span>().<span class="fn">abs</span>()
+upper = corr_matrix.<span class="fn">where</span>(np.<span class="fn">triu</span>(np.<span class="fn">ones</span>(corr_matrix.shape), k=<span class="num">1</span>).<span class="fn">astype</span>(bool))
+to_drop = [col <span class="kw">for</span> col <span class="kw">in</span> upper.columns <span class="kw">if</span> <span class="fn">any</span>(upper[col] > <span class="num">0.95</span>)]
+df.<span class="fn">drop</span>(columns=to_drop, inplace=<span class="cls">True</span>)
+
+le = <span class="cls">LabelEncoder</span>()
+y = le.<span class="fn">fit_transform</span>(df[<span class="str">'Label'</span>])`
+        }
+      },
+      {
+        title: "Training XGBoost Multiclasse",
+        desc: `XGBoost gestisce bene il multiclasse con <code>objective='multi:softprob'</code>. Usa <code>scale_pos_weight</code> o sample weights per bilanciare. La GPU accellera il training enormemente (<code>tree_method='gpu_hist'</code>).`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> xgboost <span class="kw">as</span> xgb
+<span class="imp">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+<span class="imp">from</span> sklearn.metrics <span class="kw">import</span> classification_report
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="num">0.2</span>, stratify=y, random_state=<span class="num">42</span>)
+
+model = xgb.<span class="cls">XGBClassifier</span>(
+    objective=<span class="str">'multi:softprob'</span>,
+    num_class=<span class="fn">len</span>(le.classes_),
+    n_estimators=<span class="num">300</span>,
+    max_depth=<span class="num">7</span>,
+    learning_rate=<span class="num">0.1</span>,
+    subsample=<span class="num">0.8</span>,
+    colsample_bytree=<span class="num">0.8</span>,
+    tree_method=<span class="str">'hist'</span>,  <span class="cm"># 'gpu_hist' se disponibile</span>
+    eval_metric=<span class="str">'mlogloss'</span>,
+    use_label_encoder=<span class="cls">False</span>,
+    n_jobs=-<span class="num">1</span>
+)
+model.<span class="fn">fit</span>(X_train, y_train,
+          eval_set=[(X_test, y_test)],
+          early_stopping_rounds=<span class="num">20</span>)`
+        },
+        output: `[290] validation_0-mlogloss: 0.00312
+Early stopping at round 290
+
+Accuracy:  0.9987
+F1 Macro:  0.9941
+DDoS detection:    99.8% recall
+Bot detection:     98.2% recall
+Infiltration:      94.1% recall  ← classe più difficile`
+      },
+      {
+        title: "SHAP per Spiegabilità IDS",
+        desc: `Per ogni alert, genera una spiegazione delle feature che hanno influenzato la decisione. Questo è fondamentale per i <strong>SOC analyst</strong>: invece di "questo è un DDoS", diciamo "alto packet rate + piccoli pacchetti + basso inter-arrival time → DDoS (conf. 99.2%)".`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> shap
+
+explainer = shap.<span class="cls">TreeExplainer</span>(model)
+shap_values = explainer.<span class="fn">shap_values</span>(X_test[:<span class="num">500</span>])
+
+<span class="cm"># Beeswarm plot per ogni classe</span>
+<span class="kw">for</span> i, attack_name <span class="kw">in</span> <span class="fn">enumerate</span>(le.classes_):
+    shap.<span class="fn">summary_plot</span>(
+        shap_values[i],
+        X_test[:<span class="num">500</span>],
+        feature_names=feature_names,
+        title=<span class="str">f'SHAP – {attack_name}'</span>,
+        show=<span class="cls">False</span>
+    )
+    plt.<span class="fn">savefig</span>(<span class="str">f'shap_{attack_name}.png'</span>)`
+        },
+        callout: { type: "tip", label: "💡 SOC Integration", text: "Esporta le spiegazioni SHAP come JSON nell'alert. Il SOC analyst vede: [Flow Duration: +0.42] [Packet Length Std: +0.31] [Dst Port 80: -0.12]. Riduce il tempo di triage del 60%." }
+      }
+    ]
+  },
+  {
+    id: "g04",
+    cat: "dl",
+    title: "CNN per Classificazione Malware Visuale",
+    summary: "Trasforma binari PE in immagini e applica una CNN per classificare famiglie di malware senza reverse engineering.",
+    difficulty: "intermediate",
+    diffLabel: "INTERMEDIATE",
+    time: "~3.5h",
+    chips: ["PyTorch", "PIL", "torchvision", "numpy"],
+    steps: [
+      {
+        title: "Binary Visualization Technique",
+        desc: `Il metodo <strong>Nataraj et al. (2011)</strong> visualizza file binari come immagini in scala di grigi: ogni byte (0-255) diventa un pixel. Il file viene reshapato in una matrice quadrata. Pattern visivi diversi corrispondono a famiglie di malware diverse.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> numpy <span class="kw">as</span> np
+<span class="imp">from</span> PIL <span class="kw">import</span> <span class="cls">Image</span>
+
+<span class="kw">def</span> <span class="fn">binary_to_image</span>(filepath, img_size=(<span class="num">256</span>, <span class="num">256</span>)):
+    <span class="kw">with</span> <span class="fn">open</span>(filepath, <span class="str">'rb'</span>) <span class="kw">as</span> f:
+        data = np.<span class="fn">frombuffer</span>(f.<span class="fn">read</span>(), dtype=np.uint8)
+
+    <span class="cm"># Padding/troncamento a dimensione fissa</span>
+    target = img_size[<span class="num">0</span>] * img_size[<span class="num">1</span>]
+    <span class="kw">if</span> <span class="fn">len</span>(data) < target:
+        data = np.<span class="fn">pad</span>(data, (<span class="num">0</span>, target - <span class="fn">len</span>(data)))
+    <span class="kw">else</span>:
+        data = data[:target]
+
+    img_array = data.<span class="fn">reshape</span>(img_size)
+    <span class="kw">return</span> <span class="cls">Image</span>.<span class="fn">fromarray</span>(img_array.astype(np.uint8), <span class="str">'L'</span>)`
+        },
+        callout: { type: "info", label: "📊 Dataset", text: "Usa Malimg dataset (9,339 campioni, 25 famiglie) o Microsoft BIG 2015 (10.8k campioni, 9 famiglie). Entrambi hanno le immagini già generate." }
+      },
+      {
+        title: "Custom CNN Architecture",
+        desc: `Usiamo una CNN leggera con 3 blocchi conv (BatchNorm + ReLU + MaxPool) seguiti da 2 layer FC. La rete accetta immagini 256×256 a canale singolo. Alternativa: fine-tuning di ResNet18 con cambio del primo layer (1 canale invece di 3).`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="cls">MalwareCNN</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, num_classes=<span class="num">25</span>):
+        <span class="fn">super</span>().__init__()
+        self.features = nn.<span class="cls">Sequential</span>(
+            nn.<span class="cls">Conv2d</span>(<span class="num">1</span>, <span class="num">32</span>, <span class="num">3</span>, padding=<span class="num">1</span>), nn.<span class="cls">BatchNorm2d</span>(<span class="num">32</span>), nn.<span class="cls">ReLU</span>(), nn.<span class="cls">MaxPool2d</span>(<span class="num">2</span>),
+            nn.<span class="cls">Conv2d</span>(<span class="num">32</span>, <span class="num">64</span>, <span class="num">3</span>, padding=<span class="num">1</span>), nn.<span class="cls">BatchNorm2d</span>(<span class="num">64</span>), nn.<span class="cls">ReLU</span>(), nn.<span class="cls">MaxPool2d</span>(<span class="num">2</span>),
+            nn.<span class="cls">Conv2d</span>(<span class="num">64</span>, <span class="num">128</span>, <span class="num">3</span>, padding=<span class="num">1</span>), nn.<span class="cls">BatchNorm2d</span>(<span class="num">128</span>), nn.<span class="cls">ReLU</span>(), nn.<span class="cls">MaxPool2d</span>(<span class="num">2</span>),
+        )
+        self.classifier = nn.<span class="cls">Sequential</span>(
+            nn.<span class="cls">Linear</span>(<span class="num">128</span> * <span class="num">32</span> * <span class="num">32</span>, <span class="num">512</span>), nn.<span class="cls">ReLU</span>(), nn.<span class="cls">Dropout</span>(<span class="num">0.5</span>),
+            nn.<span class="cls">Linear</span>(<span class="num">512</span>, num_classes)
+        )`
+        }
+      },
+      {
+        title: "Training con Data Augmentation",
+        desc: `Applica augmentazione leggera: flip orizzontale e rotazioni piccole (±10°). Evita trasformazioni aggressive che alterano i pattern di byte significativi. Usa <code>CosineAnnealingLR</code> come scheduler.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">from</span> torchvision <span class="kw">import</span> transforms
+<span class="imp">from</span> torch.optim.lr_scheduler <span class="kw">import</span> <span class="cls">CosineAnnealingLR</span>
+
+transform_train = transforms.<span class="cls">Compose</span>([
+    transforms.<span class="cls">Grayscale</span>(),
+    transforms.<span class="cls">Resize</span>((<span class="num">256</span>, <span class="num">256</span>)),
+    transforms.<span class="cls">RandomHorizontalFlip</span>(),
+    transforms.<span class="cls">RandomRotation</span>(<span class="num">5</span>),
+    transforms.<span class="cls">ToTensor</span>(),
+])
+
+optimizer = torch.optim.<span class="cls">Adam</span>(model.<span class="fn">parameters</span>(), lr=<span class="num">1e-3</span>)
+scheduler = <span class="cls">CosineAnnealingLR</span>(optimizer, T_max=<span class="num">50</span>, eta_min=<span class="num">1e-6</span>)
+criterion = nn.<span class="cls">CrossEntropyLoss</span>()`
+        },
+        output: `Epoch 50/50
+Train Acc: 99.2% | Val Acc: 97.8%
+Test Accuracy: 97.4%
+Best families: Allaple (99.9%), Lollipop (99.1%)
+Hardest: Skintrim (89.2%) ← famiglie polimorfiche`
+      },
+      {
+        title: "Grad-CAM Visualization",
+        desc: `Usa <strong>Gradient-weighted Class Activation Mapping</strong> per visualizzare quali regioni dell'immagine (=quali zone del binario) attivano la classificazione. Fondamentale per la validazione forense del modello.`,
+        code: {
+          lang: "python",
+          content: `<span class="kw">def</span> <span class="fn">grad_cam</span>(model, img_tensor, target_layer):
+    gradients = []
+    activations = []
+
+    <span class="kw">def</span> <span class="fn">hook_fn</span>(module, grad_in, grad_out):
+        gradients.<span class="fn">append</span>(grad_out[<span class="num">0</span>])
+
+    handle = target_layer.<span class="fn">register_backward_hook</span>(hook_fn)
+    output = model.<span class="fn">forward</span>(img_tensor)
+    pred_class = output.<span class="fn">argmax</span>()
+    output[<span class="num">0</span>, pred_class].<span class="fn">backward</span>()
+
+    grad = gradients[<span class="num">0</span>].<span class="fn">mean</span>(dim=[<span class="num">0</span>, <span class="num">2</span>, <span class="num">3</span>], keepdim=<span class="cls">True</span>)
+    cam = (grad * model.features[-<span class="num">1</span>].output).<span class="fn">sum</span>(dim=<span class="num">1</span>)
+    cam = nn.functional.<span class="fn">relu</span>(cam).squeeze()
+    handle.<span class="fn">remove</span>()
+    <span class="kw">return</span> cam`
+        },
+        callout: { type: "tip", label: "🚀 Next Step", text: "Prova transfer learning con EfficientNet-B0 (1 canale): accuracy 98.9% con meno parametri. Combina visualizzazione + feature EMBER per un ensemble ancora più robusto." }
+      }
+    ]
+  },
+  {
+    id: "g05",
+    cat: "adv",
+    title: "Adversarial Attacks su Malware Classifier",
+    summary: "Genera adversarial examples per bypassare un malware detector ML usando gradient-based perturbations su feature statiche.",
+    difficulty: "advanced",
+    diffLabel: "ADVANCED",
+    time: "~4h",
+    chips: ["PyTorch", "LIEF", "numpy", "cleverhans"],
+    steps: [
+      {
+        title: "Problema & Threat Model",
+        desc: `Scenario: un attaccante vuole modificare un malware in modo che un <strong>ML-based AV</strong> lo classifichi come benigno, mantenendo la funzionalità originale. Constraint: solo modifiche che non alterano il comportamento (sezioni aggiuntive, padding, falsi import).`,
+        callout: { type: "warn", label: "⚠️ Ethical Note", text: "Questa guida è puramente educativa per comprendere le limitazioni dei modelli ML. Le tecniche devono essere usate solo in ambienti di lab isolati o per ricerca difensiva." }
+      },
+      {
+        title: "Feature Space vs Problem Space",
+        desc: `L'evasion nel <strong>feature space</strong> (modificare direttamente il vettore numerico) non garantisce che la modifica sia realizzabile nel binario reale (<strong>problem space</strong>). Dobbiamo mappare le perturbazioni a modifiche PE valide:\n\n- <code>byte_histogram</code>: aggiungere una sezione con bytes specifici\n- <code>imports</code>: aggiungere DLL/funzioni inutilizzate al IAT\n- <code>strings</code>: iniettare stringhe benigne in una sezione dati`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> lief
+
+<span class="kw">def</span> <span class="fn">add_benign_section</span>(pe_path, target_bytes):
+    <span class="str">"""Aggiunge una sezione .extra con bytes calcolati per
+    spostare l'istogramma verso distribuzioni benigne."""</span>
+    binary = lief.<span class="fn">parse</span>(pe_path)
+    section = lief.PE.<span class="cls">Section</span>()
+    section.name = <span class="str">".extra"</span>
+    section.content = target_bytes  <span class="cm"># bytes ottimizzati</span>
+    section.characteristics = (
+        lief.PE.SECTION_CHARACTERISTICS.CNT_INITIALIZED_DATA |
+        lief.PE.SECTION_CHARACTERISTICS.MEM_READ
+    )
+    binary.<span class="fn">add_section</span>(section)
+    binary.write(pe_path + <span class="str">".adv"</span>)`
+        }
+      },
+      {
+        title: "FGSM nel Feature Space",
+        desc: `<strong>Fast Gradient Sign Method</strong>: calcola il gradiente della loss rispetto all'input, poi muovi l'input nella direzione opposta al gradiente (per ridurre la score malevola). Solo le feature "modificabili" vengono perturbate.`,
+        code: {
+          lang: "python",
+          content: `<span class="kw">def</span> <span class="fn">fgsm_attack</span>(model, features, epsilon=<span class="num">0.1</span>, modifiable_mask=<span class="cls">None</span>):
+    <span class="str">"""
+    FGSM: x_adv = x - epsilon * sign(∇_x L(f(x), y_malware))
+    modifiable_mask: bool array, True = feature modificabile
+    """</span>
+    x = features.<span class="fn">clone</span>().<span class="fn">detach</span>().<span class="fn">requires_grad</span>(<span class="cls">True</span>)
+    output = model.<span class="fn">forward</span>(x)
+
+    <span class="cm"># Target: classe benigna (0)</span>
+    loss = nn.functional.<span class="fn">cross_entropy</span>(output, torch.<span class="fn">tensor</span>([<span class="num">0</span>]))
+    model.<span class="fn">zero_grad</span>()
+    loss.<span class="fn">backward</span>()
+
+    grad_sign = x.grad.data.<span class="fn">sign</span>()
+
+    <span class="cm"># Applica solo su feature modificabili</span>
+    perturbation = epsilon * grad_sign
+    <span class="kw">if</span> modifiable_mask <span class="kw">is not None</span>:
+        perturbation *= modifiable_mask
+
+    x_adv = x + perturbation
+    <span class="kw">return</span> x_adv.<span class="fn">clamp</span>(<span class="num">0</span>, <span class="num">1</span>)  <span class="cm"># mantieni range valido</span>`
+        },
+        output: `Original score (malware): 0.982
+After FGSM (ε=0.05): 0.441  → borderline
+After FGSM (ε=0.10): 0.089  → classified BENIGN
+Iterations needed (PGD): 15 steps
+Feature modifications: 23/2381 features changed`
+      },
+      {
+        title: "Difese: Adversarial Training",
+        desc: `La difesa principale è <strong>adversarial training</strong>: includi esempi avversariali nel training set. Il modello impara a essere robusto a perturbazioni ε-bounded. Trade-off: robustezza avversariale vs accuratezza su dati puliti (~2-3% drop).`,
+        code: {
+          lang: "python",
+          content: `<span class="kw">def</span> <span class="fn">adversarial_training_step</span>(model, batch, epsilon=<span class="num">0.05</span>):
+    X, y = batch
+    <span class="cm"># 50% dati clean, 50% avversariali (Madry et al.)</span>
+    half = X.shape[<span class="num">0</span>] // <span class="num">2</span>
+    X_adv = <span class="fn">pgd_attack</span>(model, X[:half], y[:half], epsilon)
+    X_mixed = torch.<span class="fn">cat</span>([X[half:], X_adv], dim=<span class="num">0</span>)
+    y_mixed = torch.<span class="fn">cat</span>([y[half:], y[:half]], dim=<span class="num">0</span>)
+
+    optimizer.<span class="fn">zero_grad</span>()
+    loss = criterion.<span class="fn">apply</span>(model(X_mixed), y_mixed)
+    loss.<span class="fn">backward</span>()
+    optimizer.<span class="fn">step</span>()
+    <span class="kw">return</span> loss.<span class="fn">item</span>()`
+        },
+        callout: { type: "tip", label: "💡 Risultati Attesi", text: "Modello standard: 98.2% accuracy, 0% robustezza a ε=0.1. Modello adv-trained: 95.8% accuracy, 87.3% robustezza a ε=0.1. Il trade-off è necessario." }
+      }
+    ]
+  },
+  {
+    id: "g06",
+    cat: "mlops",
+    title: "MLOps Pipeline: da Notebook a Produzione",
+    summary: "Deploy completo di un modello ML: MLflow tracking, Docker containerization, FastAPI endpoint, CI/CD con GitHub Actions.",
+    difficulty: "advanced",
+    diffLabel: "ADVANCED",
+    time: "~5h",
+    chips: ["MLflow", "Docker", "FastAPI", "GitHub Actions"],
+    steps: [
+      {
+        title: "MLflow Experiment Tracking",
+        desc: `Ogni esperimento ML deve essere riproducibile. MLflow registra: parametri, metriche, artefatti (modello, grafici) e l'ambiente (requirements.txt, git hash). Imposta un <strong>MLflow Tracking Server</strong> locale o su cloud.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">import</span> mlflow
+<span class="imp">import</span> mlflow.sklearn
+
+mlflow.<span class="fn">set_experiment</span>(<span class="str">"malware_detection_v2"</span>)
+
+<span class="kw">with</span> mlflow.<span class="fn">start_run</span>(run_name=<span class="str">"rf_baseline"</span>) <span class="kw">as</span> run:
+    <span class="cm"># Log parametri</span>
+    mlflow.<span class="fn">log_params</span>({
+        <span class="str">"n_estimators"</span>: <span class="num">100</span>, <span class="str">"max_depth"</span>: <span class="str">"None"</span>,
+        <span class="str">"dataset"</span>: <span class="str">"ember_2018"</span>, <span class="str">"features"</span>: <span class="num">2381</span>
+    })
+    <span class="cm"># Allena il modello...</span>
+    mlflow.<span class="fn">log_metrics</span>({<span class="str">"f1"</span>: <span class="num">0.982</span>, <span class="str">"accuracy"</span>: <span class="num">0.979</span>, <span class="str">"auc"</span>: <span class="num">0.997</span>})
+    <span class="cm"># Salva modello nel registry</span>
+    mlflow.sklearn.<span class="fn">log_model</span>(rf_model, <span class="str">"model"</span>,
+        registered_model_name=<span class="str">"malware_detector"</span>)
+    <span class="fn">print</span>(<span class="str">f"Run ID: {run.info.run_id}"</span>)`
+        },
+        callout: { type: "info", label: "🌐 MLflow UI", text: "Avvia la UI con: mlflow ui --port 5000. Naviga su http://localhost:5000 per confrontare run, visualizzare metriche e scaricare modelli." }
+      },
+      {
+        title: "Dockerfile Multi-Stage",
+        desc: `Un Dockerfile multi-stage: <strong>build stage</strong> compila le dipendenze pesanti, <strong>runtime stage</strong> copia solo i file necessari. Riduce l'immagine finale da ~4GB a ~600MB.`,
+        code: {
+          lang: "dockerfile",
+          content: `<span class="cm"># Stage 1: Build</span>
+<span class="kw">FROM</span> python:<span class="num">3.11</span>-slim <span class="kw">AS</span> builder
+<span class="kw">WORKDIR</span> /build
+<span class="kw">COPY</span> requirements.txt .
+<span class="kw">RUN</span> pip install --user --no-cache-dir -r requirements.txt
+
+<span class="cm"># Stage 2: Runtime</span>
+<span class="kw">FROM</span> python:<span class="num">3.11</span>-slim
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> --from=builder /root/.local /root/.local
+<span class="kw">COPY</span> src/ ./src/
+<span class="kw">COPY</span> models/ ./models/
+
+<span class="kw">ENV</span> PATH=/root/.local/bin:$PATH
+<span class="kw">EXPOSE</span> <span class="num">8000</span>
+<span class="kw">CMD</span> [<span class="str">"uvicorn"</span>, <span class="str">"src.main:app"</span>, <span class="str">"--host"</span>, <span class="str">"0.0.0.0"</span>, <span class="str">"--port"</span>, <span class="str">"8000"</span>]`
+        }
+      },
+      {
+        title: "FastAPI Production Endpoint",
+        desc: `Endpoint REST con: <strong>health check</strong>, <strong>predict endpoint</strong> con schema Pydantic, <strong>rate limiting</strong> (SlowAPI), logging strutturato, metriche Prometheus via <code>starlette-exporter</code>.`,
+        code: {
+          lang: "python",
+          content: `<span class="imp">from</span> fastapi <span class="kw">import</span> <span class="cls">FastAPI</span>, <span class="cls">HTTPException</span>
+<span class="imp">from</span> pydantic <span class="kw">import</span> <span class="cls">BaseModel</span>
+<span class="imp">import</span> joblib, numpy <span class="kw">as</span> np
+
+app = <span class="cls">FastAPI</span>(title=<span class="str">"CyberML Inference API"</span>, version=<span class="str">"2.0"</span>)
+model = joblib.<span class="fn">load</span>(<span class="str">"models/malware_rf.pkl"</span>)
+
+<span class="kw">class</span> <span class="cls">PredictRequest</span>(<span class="cls">BaseModel</span>):
+    features: list[float]  <span class="cm"># 2381 features EMBER</span>
+
+<span class="cls">@app.get</span>(<span class="str">"/health"</span>)
+<span class="kw">def</span> <span class="fn">health</span>():
+    <span class="kw">return</span> {<span class="str">"status"</span>: <span class="str">"healthy"</span>, <span class="str">"model_version"</span>: <span class="str">"v2.1"</span>}
+
+<span class="cls">@app.post</span>(<span class="str">"/predict"</span>)
+<span class="kw">def</span> <span class="fn">predict</span>(req: <span class="cls">PredictRequest</span>):
+    x = np.<span class="fn">array</span>(req.features).reshape(<span class="num">1</span>, -<span class="num">1</span>)
+    prob = model.<span class="fn">predict_proba</span>(x)[<span class="num">0</span>][<span class="num">1</span>]
+    <span class="kw">return</span> {<span class="str">"label"</span>: <span class="str">"MALWARE"</span> <span class="kw">if</span> prob > <span class="num">0.5</span> <span class="kw">else</span> <span class="str">"BENIGN"</span>,
+            <span class="str">"confidence"</span>: <span class="fn">round</span>(<span class="fn">float</span>(prob), <span class="num">4</span>)}`
+        }
+      },
+      {
+        title: "CI/CD con GitHub Actions",
+        desc: `Pipeline automatica: ad ogni push su <code>main</code>, testa il modello, builda l'immagine Docker, la pusha su GHCR, e fa il deploy su un server via SSH. Include regression test per la detection rate minima.`,
+        code: {
+          lang: "yaml",
+          content: `<span class="cm"># .github/workflows/deploy.yml</span>
+<span class="kw">name</span>: <span class="str">CI/CD Pipeline</span>
+<span class="kw">on</span>: [push]
+
+<span class="kw">jobs</span>:
+  <span class="fn">test-and-deploy</span>:
+    <span class="kw">runs-on</span>: ubuntu-latest
+    <span class="kw">steps</span>:
+      - <span class="kw">uses</span>: actions/checkout@v3
+      - <span class="fn">name</span>: <span class="str">Run model tests</span>
+        <span class="kw">run</span>: |
+          pip install -r requirements.txt
+          pytest tests/ -v --tb=short
+      - <span class="fn">name</span>: <span class="str">Build Docker image</span>
+        <span class="kw">run</span>: docker build -t ghcr.io/${{ github.repository }}:latest .
+      - <span class="fn">name</span>: <span class="str">Push to GHCR</span>
+        <span class="kw">run</span>: docker push ghcr.io/${{ github.repository }}:latest
+      - <span class="fn">name</span>: <span class="str">Deploy to server</span>
+        <span class="kw">run</span>: |
+          ssh deploy@${{ secrets.SERVER_IP }} \
+          "docker pull ghcr.io/${{ github.repository }}:latest &&
+           docker-compose up -d --no-deps api"`
+        },
+        callout: { type: "tip", label: "🚀 Next Step", text: "Aggiungi model drift monitoring con Evidently AI. Se la distribuzione dei dati in produzione devia dal training (>5% PSI), trigghera automaticamente un re-training." }
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   GUIDE STATE
+============================================================ */
+let activeGuide = null;
+let activeStep  = 0;
+const completedSteps = {}; // { guideId: Set of step indices }
+
+/* ============================================================
+   RENDER GUIDES
+============================================================ */
+function diffClass(d)  { return `diff-${d}`; }
+function catClass(c)   { const m = {ml:'cat-ml',dl:'cat-dl',security:'cat-security',mlops:'cat-mlops',adv:'cat-adv'}; return m[c]||'cat-ml'; }
+function catLabel(c)   { const m = {ml:'ML Classico',dl:'Deep Learning',security:'Security',mlops:'MLOps',adv:'Adversarial ML'}; return m[c]||c; }
+
+function renderGuides() {
+  const container = document.getElementById("guides-grid");
+  container.innerHTML = "";
+
+  GUIDES.forEach(guide => {
+    const el = document.createElement("div");
+    el.className = "guide-card fade-in";
+    el.dataset.cat = guide.cat;
+    el.dataset.id  = guide.id;
+
+    const done   = (completedSteps[guide.id] || new Set()).size;
+    const total  = guide.steps.length;
+    const pct    = Math.round((done / total) * 100);
+
+    el.innerHTML = `
+      <div class="guide-card-header">
+        <div class="guide-meta">
+          <span class="guide-cat-badge ${catClass(guide.cat)}">${catLabel(guide.cat)}</span>
+          <span class="guide-difficulty ${diffClass(guide.difficulty)}">◆ ${guide.diffLabel}</span>
+        </div>
+        <div class="guide-title">${guide.title}</div>
+        <div class="guide-summary">${guide.summary}</div>
+        ${pct > 0 ? `
+        <div style="margin-top:0.75rem">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted)">PROGRESSO</span>
+            <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--neon-cyan)">${done}/${total} steps</span>
+          </div>
+          <div class="progress-bar-track" style="height:3px">
+            <div class="progress-bar-fill" style="width:${pct}%"></div>
+          </div>
+        </div>` : ''}
+      </div>
+      <div class="guide-card-footer">
+        <div class="guide-chips">
+          ${guide.chips.map(c=>`<span class="guide-chip">${c}</span>`).join('')}
+        </div>
+        <span class="guide-time">⏱ ${guide.time}</span>
+      </div>
+    `;
+
+    el.addEventListener("click", () => openGuide(guide.id));
+    container.appendChild(el);
+  });
+}
+
+/* ============================================================
+   FILTER GUIDES
+============================================================ */
+document.getElementById("guide-filters").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  const cat = btn.dataset.cat;
+  document.querySelectorAll(".guide-card").forEach(card => {
+    if (cat === "all" || card.dataset.cat === cat) {
+      card.classList.remove("hidden");
+    } else {
+      card.classList.add("hidden");
+    }
+  });
+});
+
+/* ============================================================
+   OPEN / CLOSE GUIDE MODAL
+============================================================ */
+function openGuide(id) {
+  const guide = GUIDES.find(g => g.id === id);
+  if (!guide) return;
+  activeGuide = guide;
+  activeStep  = 0;
+
+  if (!completedSteps[guide.id]) completedSteps[guide.id] = new Set();
+
+  document.getElementById("modal-title").textContent = guide.title;
+  document.getElementById("modal-meta").innerHTML = `
+    <span class="guide-cat-badge ${catClass(guide.cat)}">${catLabel(guide.cat)}</span>
+    <span class="guide-difficulty ${diffClass(guide.difficulty)}">◆ ${guide.diffLabel}</span>
+    <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-left:0.5rem">⏱ ${guide.time}</span>
+  `;
+
+  renderStepProgress();
+  renderStepContent(0);
+
+  const overlay = document.getElementById("guide-modal-overlay");
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+  overlay.scrollTop = 0;
+}
+
+function closeGuide() {
+  document.getElementById("guide-modal-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+  // Refresh card to show updated progress
+  renderGuides();
+  requestAnimationFrame(() => requestAnimationFrame(initAnimations));
+}
+
+document.getElementById("guide-modal-close").addEventListener("click", closeGuide);
+document.getElementById("guide-modal-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("guide-modal-overlay")) closeGuide();
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeGuide();
+});
+
+/* ============================================================
+   STEP PROGRESS DOTS
+============================================================ */
+function renderStepProgress() {
+  const container = document.getElementById("step-progress");
+  const done = completedSteps[activeGuide.id];
+  container.innerHTML = "";
+
+  activeGuide.steps.forEach((step, i) => {
+    const dotWrap = document.createElement("div");
+    dotWrap.className = `step-dot${i === activeStep ? " active" : ""}${done.has(i) ? " done" : ""}`;
+    dotWrap.innerHTML = `
+      <div class="step-dot-circle">${done.has(i) ? "✓" : i+1}</div>
+      <div class="step-dot-label">${step.title}</div>
+    `;
+    dotWrap.addEventListener("click", () => goToStep(i));
+    container.appendChild(dotWrap);
+
+    if (i < activeGuide.steps.length - 1) {
+      const conn = document.createElement("div");
+      conn.className = `step-connector${done.has(i) ? " done" : ""}`;
+      container.appendChild(conn);
+    }
+  });
+}
+
+/* ============================================================
+   RENDER STEP CONTENT
+============================================================ */
+function renderStepContent(idx) {
+  const container = document.getElementById("step-contents");
+  const step = activeGuide.steps[idx];
+  const done = completedSteps[activeGuide.id];
+  const isLast = idx === activeGuide.steps.length - 1;
+  const isAllDone = activeGuide.steps.every((_, i) => done.has(i));
+
+  let html = `
+    <div class="step-content active">
+      <div class="step-header">
+        <span class="step-num-badge">STEP ${idx + 1} / ${activeGuide.steps.length}</span>
+        <h3 class="step-title">${step.title}</h3>
+      </div>
+      <div class="step-desc">${step.desc.replace(/\n/g, '<br>')}</div>
+  `;
+
+  if (step.callout && !step.code) {
+    html += renderCallout(step.callout);
+  }
+
+  if (step.code) {
+    html += `
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">${step.code.lang}</span>
+          <button class="code-copy-btn" onclick="copyCode(this)">COPY</button>
+        </div>
+        <pre><code>${step.code.content}</code></pre>
+      </div>
+    `;
+  }
+
+  if (step.output) {
+    html += `<div class="step-output">${step.output}</div>`;
+  }
+
+  if (step.callout && step.code) {
+    html += renderCallout(step.callout);
+  }
+
+  // Nav
+  html += `
+    <div class="step-nav">
+      <button class="step-nav-btn" onclick="prevStep()" ${idx === 0 ? 'disabled' : ''}>← Indietro</button>
+      <span class="step-nav-counter">${idx + 1} di ${activeGuide.steps.length}</span>
+      ${isLast
+        ? `<button class="step-nav-btn finish-btn" onclick="finishGuide()">
+             ${isAllDone ? "✓ Completato!" : "✓ Completa Guida"}
+           </button>`
+        : `<button class="step-nav-btn next-btn" onclick="nextStep()">Avanti →</button>`
+      }
+    </div>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+function renderCallout(c) {
+  return `
+    <div class="step-callout ${c.type}">
+      <span class="callout-label">${c.label}</span>
+      ${c.text}
+    </div>
+  `;
+}
+
+/* ============================================================
+   STEP NAVIGATION
+============================================================ */
+function goToStep(idx) {
+  completedSteps[activeGuide.id].add(activeStep);
+  activeStep = idx;
+  renderStepProgress();
+  renderStepContent(idx);
+  document.getElementById("guide-modal").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function nextStep() {
+  completedSteps[activeGuide.id].add(activeStep);
+  if (activeStep < activeGuide.steps.length - 1) {
+    activeStep++;
+    renderStepProgress();
+    renderStepContent(activeStep);
+  }
+}
+
+function prevStep() {
+  if (activeStep > 0) {
+    activeStep--;
+    renderStepProgress();
+    renderStepContent(activeStep);
+  }
+}
+
+function finishGuide() {
+  completedSteps[activeGuide.id].add(activeStep);
+  // Mark all steps done
+  activeGuide.steps.forEach((_, i) => completedSteps[activeGuide.id].add(i));
+  renderStepProgress();
+  renderStepContent(activeStep);
+}
+
+/* ============================================================
+   COPY CODE
+============================================================ */
+function copyCode(btn) {
+  const pre = btn.closest(".code-block").querySelector("pre");
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = "COPIED!";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "COPY"; btn.classList.remove("copied"); }, 2000);
+  }).catch(() => {
+    btn.textContent = "ERROR";
+    setTimeout(() => { btn.textContent = "COPY"; }, 2000);
+  });
+}
+
+
+function initAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+  document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+}
+
+/* ============================================================
+   RESET
+============================================================ */
+document.getElementById("reset-btn").addEventListener("click", () => {
+  if (confirm("Resettare tutti i progressi? Questa azione non è reversibile.")) {
+    progress = {};
+    saveProgress(progress);
+    renderCurriculum();
+    updateGlobalProgress();
+    initAnimations();
+  }
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+(function init() {
+  renderCurriculum();
+  renderArsenal();
+  updateGlobalProgress();
+
+  // Update each week progress bar on load
+  document.querySelectorAll(".week-block").forEach(w => updateWeekProgress(w));
+
+  // Init animations after DOM is rendered
+  requestAnimationFrame(() => {
+    requestAnimationFrame(initAnimations);
+  });
+})();
+</script>
+</body>
+</html>
