@@ -1,0 +1,447 @@
+### Il Teorema di Bayes
+
+Il teorema descrive la probabilità del verificarsi di un evento basandosi sulla conoscenza pregressa delle condizioni correlate.
+
+Il classificatore viene definito "Naive" perché assume che la presenza di una specifica feature (parola) in un messaggio sia totalmente indipendente dalla presenza di qualsiasi altra feature, data la classe di appartenenza. Questa semplificazione drastica permette di calcolare la Likelihood globale come una semplice moltiplicazione delle probabilità dei singoli elementi.
+
+Il modello calcola la probabilità posteriore sia per la classe Spam che per la classe Not Spam, assegnando infine l'email alla classe che ottiene il valore probabilistico più alto.
+
+
+
+## Dataset SMS Spam Collection
+
+Il modulo utilizza l'**SMS Spam Collection**, un corpus curato da T. A. Almeida, A. Yamakami e J. M. G. Hidalgo per lo sviluppo di filtri spam testuali in ambito mobile. Il dataset contiene **5.574 messaggi** annotati in due categorie:
+
+- **Ham:** Messaggi legittimi provenienti da contatti noti, iscrizioni o newsletter.
+- **Spam:** Contenuti indesiderati, non richiesti e potenzialmente rischiosi (*phishing*).
+
+
+## Download ed Estrazione Programmatica
+
+Download ed Estrazione Programmatica
+Il recupero e la decompressione dell'archivio avvengono via codice Python attraverso le librerie requests, zipfile e io.
+
+-----------------------------------------------------
+import requests
+import zipfile
+import io
+import os
+
+# 1. Download del file ZIP tramite HTTP GET
+url = "https://archive.ics.uci.edu/static/public/228/sms+spam+collection.zip"
+response = requests.get(url)
+
+if response.status_code == 200:
+    # 2. Estrazione in memoria del contenuto binario (.zip)
+    with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+        z.extractall("sms_spam_collection")
+    
+    # 3. Verifica dei file estratti nella directory target
+    print("Extracted files:", os.listdir("sms_spam_collection"))
+
+-----------------------------------------------------------
+
+Il file estratto (`SMSSpamCollection`) è strutturato in formato **TSV (Tab-Separated Values)**. Poiché è privo di una riga di intestazione (*header row*), i dati vengono mappati definendo esplicitamente il separatore `\t` e i nomi delle colonne.
+
+---------------------------------------------------------
+import pandas as pd
+
+# Caricamento del file TSV con assegnazione manuale delle colonne
+df = pd.read_csv(
+    "sms_spam_collection/SMSSpamCollection",
+    sep="\t",
+    header=None,
+    names=["label", "message"],
+)
+
+-------------------------------------------------
+
+
+Prima di procedere all'addestramento del modello, vengono eseguite tre operazioni diagnostiche fondamentali:
+
+- **Analisi Strutturale ed Esplorativa:** Uso dei metodi `head()` per visualizzare i primi record, `describe()` per la distribuzione statistica delle etichette e `info()` per il riepilogo dei tipi di dato e dei record non nulli.Python
+    
+
+-------------------------------------------------
+    
+    print(df.head())
+    print(df.describe())
+    print(df.info())
+    
+-------------------------------------------------
+
+    
+- **Controllo dei Valori Mancanti (*Missing Values*):** Verifica dell'integrità dei record per intercettare righe incomplete.Python
+    
+-------------------------------------------------
+
+    # Identificazione delle righe nulle per colonna
+
+    print("Missing values:\n", df.isnull().sum())
+
+-------------------------------------------------
+    
+- **Rimozione dei Record Duplicati:** La presenza di duplicati può alterare la distribuzione delle frequenze delle parole, introducendo *bias*. Vengono quindi identificati ed eliminati.
+
+-------------------------------------------------
+
+    # Conteggio dei record duplicati
+    print("Duplicate entries:", df.duplicated().sum())
+    
+    # Eliminazione definitiva delle righe duplicate
+    df = df.drop_duplicates()
+  
+-------------------------------------------------
+
+
+
+
+FASE DI PRE PROCESSING
+
+preprocessing del testo è una fase fondamentale nell'elaborazione del linguaggio naturale (*NLP*). Il suo scopo è standardizzare il testo, ridurre il rumore di fondo e preparare i dati per l'estrazione delle feature, ottimizzando le performance del classificatore Bayesian Spam.
+
+La pipeline sfrutta la libreria **NLTK (Natural Language Toolkit)** e richiede il download preventivo di risorse specifiche per la tokenizzazione (`punkt`, `punkt_tab`) e per il filtraggio delle parole comuni (`stopwords`).
+
+-------------------------------------------------
+
+import nltk
+
+# Download dei pacchetti NLTK obbligatori
+nltk.download("punkt")
+nltk.download("punkt_tab")
+nltk.download("stopwords")
+
+-------------------------------------------------
+## Fasi della Pipeline di Trasformazione
+
+Ogni messaggio del DataFrame subisce una serie di trasformazioni sequenziali distinte:
+
+### 1. Conversione in Minuscolo (Lowercasing)
+
+Garantisce la consistenza dimensionale uniformando i caratteri. In questo modo il modello tratterà i token "Free" e "free" come la medesima entità, riducendo la dimensionalità del vocabolario.
+
+-------------------------------------------------
+# Uniforma il testo in minuscolo
+df["message"] = df["message"].str.lower()
+-------------------------------------------------
+
+
+### 2. Rimozione di Punteggiatura e Numeri (Preservando Simboli Chiave)
+
+Per eliminare il rumore si escludono i caratteri speciali e i numeri tramite espressioni regolari (`re.sub`). Tuttavia, simboli come `$` (valore monetario) e `!` (enfasi) vengono volutamente **preservati**, poiché contengono un forte valore contestuale per identificare i messaggi di spam.
+
+-------------------------------------------------
+import re
+
+# Rimuove la punteggiatura non essenziale ma mantiene i caratteri speciali '$' e '!'
+df["message"] = df["message"].apply(lambda x: re.sub(r"[^a-z\s$!]", "", x))
+-------------------------------------------------
+
+### 3. Tokenizzazione (Tokenization)
+
+Scompone le stringhe di testo non strutturate in unità atomiche standardizzate chiamate *token* (singole parole), trasformando la frase in una lista di stringhe.
+-------------------------------------------------
+from nltk.tokenize import word_tokenize
+
+# Converte la stringa di testo in una lista di token
+df["message"] = df["message"].apply(word_tokenize)
+-------------------------------------------------
+
+
+## Fase Finale del Preprocessing NLP
+
+Dopo aver eseguito la tokenizzazione, la pipeline di testo si focalizza sulla riduzione selettiva del vocabolario e sul ripristino del formato stringa per consentire la successiva estrazione delle feature.
+
+### 1. Rimozione delle Stop Words
+
+Le *stop words* sono termini estremamente comuni (come *and*, *the*, *or*, *is*) che non apportano valore informativo o semantico. La loro rimozione riduce drasticamente il rumore di fondo nel testo, permettendo al classificatore Bayesiano di concentrarsi solo sulle parole ad alto potere discriminante per distinguere *spam* da *ham*.
+Risultato: Le liste di token diventano sensibilmente più corte e prive di elementi non informativi.
+
+-------------------------------------------------
+from nltk.corpus import stopwords
+
+# Caricamento del set di stop words inglesi
+stop_words = set(stopwords.words("english"))
+
+# Filtraggio: mantiene solo i token non presenti nell'elenco delle stop words
+df["message"] = df["message"].apply(lambda x: [word for word in x if word not in stop_words])
+
+-------------------------------------------------
+
+### Stemming
+
+Lo *stemming* normalizza le parole riducendole alla loro radice morfologica o forma base (es. *running*, *runs*, *ran* vengono tutti ricondotti a *run*). Questo processo consolida le varianti di una stessa parola, abbattendo la dimensione complessiva del vocabolario. In questo modo, il modello apprende i concetti di fondo senza subire l'influenza di variazioni linguistiche banali, migliorando la propria capacità di generalizzazione.
+
+-------------------------------------------------
+from nltk.stem import PorterStemmer
+
+# Inizializzazione dello stemmer (algoritmo di Porter)
+stemmer = PorterStemmer()
+
+# Riduzione di ogni token alla propria radice
+df["message"] = df["message"].apply(lambda x: [stemmer.stem(word) for word in x])
+
+
+***********VERIFICA***************************
+print(df["message"].head(10))
+-------------------------------------------------
+
+### Ricostruzione della Stringa (Rejoining Tokens)
+
+Sebbene la scomposizione in token sia ideale per i passaggi di pulizia logica, la maggior parte degli algoritmi di Machine Learning e delle tecniche di vettorizzazione (come la trasformazione in matrici di frequenza o *TF-IDF*) richiede come input stringhe di testo grezzo. Unire nuovamente i token in una stringa separata da spazi ripristina la compatibilità con queste librerie.
+
+A questo punto, la pipeline di preprocessing è **completata**. Ogni messaggio è ora rappresentato da una stringa pulita, normalizzata e standardizzata, pronta per essere vettorizzata e passata alla fase di addestramento del classificatore.
+
+-------------------------------------------------
+
+
+# Converti le liste di token in stringhe separate da spazi
+df["message"] = df["message"].apply(lambda x: " ".join(x) if isinstance(x, list) else x)
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Ora puoi rieseguire il tuo codice identico a prima
+vectorizer = CountVectorizer(min_df=1, max_df=0.9, ngram_range=(1, 2))
+X = vectorizer.fit_transform(df["message"])
+
+y = df["label"].apply(lambda x: 1 if x == "spam" else 0)
+
+
+-------------------------------------------------
+
+
+## Configurazione di `CountVectorizer`
+
+La classe `CountVectorizer` di Scikit-learn implementa l'approccio Bag of Words operando in tre fasi principali:
+
+1. **Tokenization:** Scompone il testo in token in base al range specificato (unigrammi e bigrammi).
+2. **Building the Vocabulary:** Crea il vocabolario globale applicando filtri di soglia per escludere termini troppo rari o troppo comuni.
+3. **Vectorization:** Trasforma ogni documento in un vettore numerico di conteggi.
+
+### Parametri Chiave per il Perfezionamento del Feature Set
+
+- `min_df=1`: Un termine deve apparire in almeno un documento per essere incluso (soglia minima).
+- `max_df=0.9`: I termini che appaiono in più del 90% dei documenti vengono esclusi, eliminando parole eccessivamente comuni che offrono scarso potere discriminante.
+- `ngram_range=(1, 2)`: Indica alla matrice delle feature di includere sia unigrammi che bigrammi.
+
+importiamo: pip install scikit-learn
+-------------------------------------------------
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Inizializza CountVectorizer con bigrams, min_df, e max_df per concentrarsi su termini rilevanti
+vectorizer = CountVectorizer(min_df=1, max_df=0.9, ngram_range=(1, 2))
+
+# adatta e trasforma colonna message
+X = vectorizer.fit_transform(df["message"])
+
+# Labels (variabile target)
+y = df["label"].apply(lambda x: 1 if x == "spam" else 0)  # Converte labels in 1 e 0
+-------------------------------------------------
+La matrice numerica X che hai ottenuto (una Sparse Matrix di Scikit-learn) è finalmente strutturata nel formato matematico ideale per essere passata in input agli algoritmi di classificazione.
+
+
+
+
+
+
+
+
+
+## Model Training: Multinomial Naive Bayes
+
+Nel contesto del filtraggio testuale e dello spam, la variante dell'algoritmo Naive Bayes più efficiente e comunemente utilizzata è il **Multinomial Naive Bayes** (`MultinomialNB`). Questa estensione del modello è specificamente progettata per gestire feature che rappresentano conteggi discreti di frequenza (esattamente come i vettori di *term counts* generati dal tuo `CountVectorizer`).
+
+Dopo il preprocessing e la definizione dei target, l'addestramento del modello viene ottimizzato tramite l'uso combinato di due strumenti fondamentali di Scikit-learn: le **Pipeline** e la **GridSearchCV**. Il modello di riferimento scelto è il classificatore *Multinomial Naive Bayes*, ideale per elaborare vettori di conteggio discreti e matrici sparse ad alta dimensionalità.
+
+### 1. Costruzione della Pipeline
+
+Una `Pipeline` consente di concatenare sequenzialmente le fasi di trasformazione dei dati e l'algoritmo di stima finale. Questo incapsulamento garantisce che la vettorizzazione (`CountVectorizer`) e la classificazione (`MultinomialNB`) vengano applicate in modo atomico e consistente sia sui dati di addestramento che su quelli di test, semplificando la manutenzione del codice ed evitando il fenomeno del *data leakage*.
+
+-------------------------------------------------
+
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+
+# crea la pipeline combinando vectorization e classification
+pipeline = Pipeline([
+    ("vectorizer", vectorizer),
+    ("classifier", MultinomialNB())
+])
+-------------------------------------------------
+
+
+## Ottimizzazione con GridSearchCV
+
+Per massimizzare le performance del modello ed evitare problemi di *overfitting*, si esegue la ricerca degli iperparametri ottimali tramite `GridSearchCV`. Questo strumento esamina sistematicamente una griglia di valori candidati eseguendo una *5-fold cross-validation* (validazione incrociata a 5 pieghe).
+
+### Il Parametro Alpha (Smoothing)
+
+Nel classificatore `MultinomialNB`, il focus dell'ottimizzazione è incentrato sul parametro **alpha** ($\alpha$). Si tratta di un fattore di *Laplace smoothing* (o Lidstone smoothing) che impedisce alle probabilità condizionate di azzerarsi nel caso in cui il modello incontri parole inedite nel set di test. Sintonizzare correttamente alpha permette di bilanciare il rapporto tra *bias* (distorsione) e *variance* (varianza).
+
+-------------------------------------------------
+# Definisce parameter grid per hyperparameter tuning
+param_grid = {
+    "classifier__alpha": [0.01, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 1.0]
+}
+
+# Performa grid search a 5-fold cross-validation e con metrica F1-score
+grid_search = GridSearchCV(
+    pipeline,
+    param_grid,
+    cv=5,
+    scoring="f1"
+)
+
+# adatta grid search su intero dataset
+grid_search.fit(df["message"], y)
+
+# Estrae miglior modello identificato da grid search
+best_model = grid_search.best_estimator_
+print("Parametri miglior modello:", grid_search.best_params_)
+-------------------------------------------------
+
+fit(X_train, y_train): Analizza le frequenze dei vettori di addestramento e mappa le relazioni matematiche probabilistiche associate alle etichette binarie (0 per ham, 1 per spam). Il modello è ora pronto per effettuare predizioni sul set di test X_test.
+
+
+
+
+
+## Valutazione del Modello su Nuovi Dati (*Inference*)
+
+Dopo la fase di addestramento e ottimizzazione iperparametrica, è fondamentale testare il modello su messaggi SMS inediti. Questa fase verifica la capacità di generalizzazione del classificatore in scenari reali. Per garantire l'integrità del processo, i nuovi dati devono subire esattamente lo stesso identico flusso di preprocessing e vettorizzazione applicato in fase di training.
+
+## Definizione dei Messaggi di Test
+
+Si predispone una lista di stringhe che simula input reali eterogenei: offerte promozionali esplicite, comunicazioni di servizio legittime, esche di *phishing* bancario, promemoria standard e messaggi a premi.
+
+-------------------------------------------------
+
+# Esempio di messaggio SMS per valutazione
+new_messages = [
+    "Congratulations! You've won a $1000 Walmart gift card. Go to http://bit.ly/1234 to claim now.",
+    "Hey, are we still meeting up for lunch today?",
+    "Urgent! Your account has been compromised. Verify your details here: www.fakebank.com/verify",
+    "Reminder: Your appointment is scheduled for tomorrow at 10am.",
+    "FREE entry in a weekly competition to win an iPad. Just text WIN to 80085 now!",
+]
+-------------------------------------------------
+
+
+
+Pipeline di Trasformazione in Fase di Esecuzione - Preprocessing Testuale Omogeneo
+I messaggi grezzi vengono elaborati tramite una funzione dedicata che replica rigorosamente la pipeline NLP utilizzata in precedenza (conversione in minuscolo, espressione regolare per preservare solo caratteri alfabetici e simboli $ e !, tokenizzazione, rimozione delle stop words e contrazione tramite stemming).
+-------------------------------------------------
+import numpy as np
+import re
+
+# Preprocessa funzioni che rispecchiano il training time di preprocessing
+def preprocess_message(message):
+    message = message.lower()
+    message = re.sub(r"[^a-z\s$!]", "", message)
+    tokens = word_tokenize(message)
+    tokens = [word for word in tokens if word not in stop_words]
+    tokens = [stemmer.stem(word) for word in tokens]
+    return " ".join(tokens)
+
+# Preprocessa e vettorizza messaggi
+processed_messages = [preprocess_message(msg) for msg in new_messages]
+-------------------------------------------------
+
+2. Vettorizzazione Coerente
+Le stringhe pulite non vengono rielaborate con un nuovo addestramento, bensì trasformate utilizzando l'istanza di CountVectorizer già configurata e memorizzata all'interno della pipeline ottimizzata (best_model.named_steps["vectorizer"]). Si utilizza esclusivamente il metodo .transform().
+-------------------------------------------------
+# Trasforma messaggi preprocessati in feature vectors
+X_new = best_model.named_steps["vectorizer"].transform(processed_messages)
+-------------------------------------------------
+
+
+
+
+
+##Generazione delle Predizioni e Probabilità
+La matrice numerica X_new viene passata al classificatore probabilistico MultinomialNB estratto dalla pipeline (best_model.named_steps["classifier"]). Vengono invocati due metodi distinti:
+
+predict(): Restituisce la classe predetta in forma binaria (0 o 1).
+predict_proba(): Restituisce un array contenente le confidenze probabilistiche distribuite sulle singole classi per ciascun messaggio.
+-------------------------------------------------
+# Previsione mediante trained classifier
+predictions = best_model.named_steps["classifier"].predict(X_new)
+prediction_probabilities = best_model.named_steps["classifier"].predict_proba(X_new)
+-------------------------------------------------
+
+
+
+
+##Output di Verifica delle Predizioni
+Il ciclo finale formatta l'output accoppiando il testo originale con le metriche di confidenza calcolate dall'algoritmo.
+
+-------------------------------------------------
+# Mostra previsioni e probabiluità per ogni messaggio valutato
+for i, msg in enumerate(new_messages):
+    prediction = "Spam" if predictions[i] == 1 else "Not-Spam"
+    spam_probability = prediction_probabilities[i][1]  # Probability of being spam
+    ham_probability = prediction_probabilities[i][0]   # Probability of being not spam
+        
+    print(f"Message: {msg}")
+    print(f"Prediction: {prediction}")
+    print(f"Spam Probability: {spam_probability:.2f}")
+    print(f"Not-Spam Probability: {ham_probability:.2f}")
+    print("-" * 50)
+-------------------------------------------------
+L'output generato a terminale mostra l'accuratezza decisionale del modello basata sulle distribuzioni di probabilità.
+
+
+
+
+
+
+
+
+
+
+## Persistenza del Modello con joblib
+
+Una volta ottenute performance soddisfacenti, il modello addestrato è stato salvato su un file per poterlo riutilizzare in seguito. Questo processo evita il costo computazionale di dover riaddestrare il modello da zero a ogni avvio, una condizione imprescindibile nei sistemi di produzione per ridurre la latenza di avvio e l'overhead hardware.
+
+La libreria **joblib** è progettata specificamente per serializzare e deserializzare oggetti Python che contengono grandi array di dati (come i modelli di Scikit-learn o gli array NumPy).
+
+- **Serializzazione (Serialization):** Converte un oggetto memorizzato nella RAM in un formato binario persistente salvabile su disco.
+- **Deserializzazione (Deserialization):** Ripristina il file archiviato su disco rigido trasformandolo nuovamente in un oggetto in memoria, riproducendone esattamente lo stesso identico stato che aveva al momento del salvataggio (inclusi i parametri appresi e le configurazioni).
+
+
+### 1. Salvataggio del Modello (Dump)
+
+Per scrivere l'intero stato della pipeline ottimizzata su un file fisico, si utilizza la funzione `joblib.dump()`.
+
+-------------------------------------------------
+
+import joblib
+
+# Salva modello su file per utilizzo futuro 
+model_filename = 'spam_detection_model.joblib'
+joblib.dump(best_model, model_filename)
+print(f"Model saved to {model_filename}")
+
+-------------------------------------------------
+
+### 2. Caricamento e Riuso in Produzione (Load)
+
+Quando l'applicazione viene riavviata o distribuita in un ambiente di produzione, il file viene ricaricato in memoria tramite `joblib.load()`. Il modello è immediatamente pronto per l'inferenza.
+
+**Nota Informativa Importante:** Prima di passare i nuovi dati al modello caricato per la predizione, questi devono tassativamente subire lo stesso identico preprocessing applicato ai dati di addestramento.
+> 
+
+-------------------------------------------------
+# Caricare modello salvato
+loaded_model = joblib.load(model_filename)
+
+# Preprocessare nuovi messaggi prima di previsione 
+new_data_processed = [preprocess_message(msg) for msg in new_messages]
+
+# Fare previsioni su dati preprocessati 
+predictions = loaded_model.predict(new_data_processed)
+-------------------------------------------------
+
+
+Questo approccio garantisce che l'intero workflow (addestramento, valutazione e deployment) rimanga efficiente, modulare e facilmente riproducibile.
