@@ -12,7 +12,7 @@ Questo repository serve come mio blocco note per tracciare i progressi nell'uso 
 
 Strumenti utilizzati
 
-* **Python** (per scrivere il codice)
+* **Python** (per scrivere il codice) mediante JupiterLab
 * **Pandas & NumPy** (per gestire il dataset e pulire le righe duplicate)
 * **NLTK** (per la manipolazione del testo: rimuovere parole inutili, fare lo stemming, ecc.)
 * **Scikit-learn** (per trasformare il testo in vettori, addestrare il modello Naive Bayes e ottimizzare i parametri)
@@ -24,17 +24,17 @@ Strumenti utilizzati
 
 Prima di dare in pasto gli SMS al modello, il testo viene ripulito passo dopo passo:
 * **Tutto in minuscolo:** Per far sì che "Free" e "free" vengano considerati la stessa parola.
-* **Via i caratteri inutili:** Rimuovo numeri e punteggiatura normale, ma tengo simboli importanti come `$` e `!` (molto frequenti nello spam).
-* **Tokenizzazione:** Divido le frasi in liste di singole parole.
-* **Rimozione Stop Words:** Elimino parole cortissime e poco informative come "and", "the", "is".
-* **Stemming:** Riduco le parole alla loro radice (es. "running" e "runs" diventano entrambi "run") per raggruppare i concetti simili.
-* **Ricostruzione stringa:** Riunisco le parole pulite in un'unica stringa.
+* **Via i caratteri inutili:** Rimuove numeri e punteggiatura normale, tiene simboli importanti come `$` e `!` (molto frequenti nello spam).
+* **Tokenizzazione:** Divide le frasi in liste di singole parole.
+* **Rimozione Stop Words:** Elimina parole cortissime e poco informative come "and", "the", "is".
+* **Stemming:** Riduce le parole alla loro radice (es. "running" e "runs" diventano entrambi "run") per raggruppare i concetti simili.
+* **Ricostruzione stringa:** Riunisce le parole pulite in un'unica stringa.
 
-A questo punto, uso `CountVectorizer` per contare quante volte appaiono le parole singole (unigrammi) e le coppie di parole (bigrammi, come "free prize"), creando la matrice numerica per il modello.
+A questo punto, usa `CountVectorizer` per contare quante volte appaiono le parole singole (unigrammi) e le coppie di parole (bigrammi, come "free prize"), creando la matrice numerica per il modello.
 
 ---
 
-## 🏋️‍♂️ Addestramento e Ottimizzazione
+## Addestramento e Ottimizzazione
 
 Per trovare la configurazione migliore per l'algoritmo `MultinomialNB`, ho usato `GridSearchCV` con una validazione incrociata (Cross-Validation). 
 
@@ -58,13 +58,13 @@ Una volta addestrato e salvato il modello, si può usare per testare nuove frasi
 ------------------------------------------------
 import joblib
 
-# Carica il modello salvato
+# Caricare il modello salvato
 loaded_model = joblib.load('spam_detection_model.joblib')
 
-# (Opzionale) Ricordati di passare il testo nella funzione di preprocessing prima!
+# (Opzionale) Ricordarsi di passare il testo nella funzione di preprocessing prima!
 new_messages = ["Congratulations! You've won a $1000 Walmart gift card."]
 new_data_processed = [preprocess_message(msg) for msg in new_messages]
 
-# Fai la predizione
+# Fare predizione
 predictions = loaded_model.predict(new_data_processed)
 print(predictions) # 1 se è spam, 0 se è ham
