@@ -1,0 +1,76 @@
+# Network Anomaly Detection using Random Forest
+
+ Panoramica del Progetto
+
+Il progetto affronta il problema del **Network Anomaly Detection**, l'identificazione di attività malevole o intrusioni analizzando le caratteristiche del traffico di rete. Come algoritmo core è stato scelto il **Random Forest**, un modello di *ensemble* basato su molteplici alberi decisionali, ideale per gestire dati complessi ad alta dimensionalità.
+
+### Obiettivi:
+* Comprendere la logica di funzionamento di un algoritmo di ensemble (Bootstrapping, Tree Construction, Voting).
+* Gestire l'intera pipeline di manipolazione dati (*Data Preprocessing*) con **Pandas** e **NumPy**.
+* Implementare strategie di suddivisione dei dati (*Splitting*) per evitare l'*overfitting*.
+* Valutare un modello multi-classe usando metriche avanzate di **Scikit-Learn** e librerie di visualizzazione (**Seaborn**, **Matplotlib**).
+
+---
+
+## Il Dataset NSL-KDD
+
+Per questo esperimento è stata utilizzata una versione modificata del dataset **NSL-KDD** (evoluzione del classico KDD Cup 1999). Si tratta di uno standard di riferimento nel settore perché:
+* Elimina i record ridondanti del dataset originale.
+* Risolve il problema del forte sbilanciamento delle classi.
+* Contiene traffico etichettato come `normal` o associato a specifiche famiglie di attacco.
+
+---
+
+## ⚙️ La Pipeline di Machine Learning
+
+Il progetto è stato suddiviso in fasi sequenziali e logiche, implementate interamente in Python.
+
+
+
+### 1. Acquisizione dei Dati
+Automazione del download dell'archivio `.zip` del dataset e relativa estrazione locale tramite script. I dati grezzi vengono poi caricati in un DataFrame Pandas mappando correttamente oltre 40 colonne di feature di rete.
+
+### 2. Preprocessing & Data Transformation
+La fase più critica del progetto, fondamentale per rendere i dati comprensibili all'algoritmo:
+* **Target Binario:** Creazione di una colonna `attack_flag` (0 = normale, 1 = attacco).
+* **Target Multi-Classe:** Raggruppamento di decine di signature di attacco in 4 macro-categorie principali:
+  * `1` -> **DoS** (Denial of Service, es. neptune, smurf)
+  * `2` -> **Probe** (Network scanning, es. nmap, satan)
+  * `3` -> **Privilege Escalation** (Tentativi di root access, es. buffer_overflow)
+  * `4` -> **Access** (Violazione dei controlli di accesso, es. guess_passwd)
+* **One-Hot Encoding:** Trasformazione delle variabili categoriali di testo (come `protocol_type` e `service`) in indicatori binari numerici tramite `pd.get_dummies`.
+* **Feature Selection:** Unione delle nuove colonne encodate con le metriche statistiche numeriche originali (es. `duration`, `src_bytes`, `dst_bytes`).
+
+### 3. Data Splitting Strategico
+Per garantire una valutazione imparziale ed evitare che il modello "impari a memoria" i dati (data leakage), il dataset è stato diviso rigorosamente in tre parti:
+1. **Core Training Set (`multi_train_X`):** Utilizzato per fare il *fitting* dell'algoritmo.
+2. **Validation Set (`multi_val_X`):** Utilizzato per il monitoraggio e il *tuning* degli iperparametri.
+3. **Test Set (`test_X`):** Un 20% di dati tenuti totalmente isolati, usati come "esame finale" per misurare le performance reali.
+
+### 4. Addestramento e Valutazione
+Il modello è stato addestrato istanziando un `RandomForestClassifier`. Per l'analisi dei risultati sono state estratte le metriche pesate complessive e per singola classe:
+
+* **Accuracy:** Percentuale di predizioni corrette sul totale.
+* **Precision / Recall / F1-Score:** Essenziali per capire l'efficacia del modello sulle classi di attacco più rare (come la *Privilege Escalation*).
+* **Confusion Matrix:** Visualizzata graficamente per identificare visivamente i falsi positivi e i falsi negativi.
+
+
+
+---
+
+## Tecnologie e Librerie Utilizzate
+
+* **Python 3**
+* **Pandas & NumPy:** Manipolazione e pulizia dei dati tabulari.
+* **Scikit-Learn:** Creazione del modello Random Forest, data splitting e calcolo delle metriche di classificazione.
+* **Joblib:** Salvataggio e persistenza del modello addestrato.
+* **Seaborn & Matplotlib:** Generazione dei grafici e delle mappe di calore della Confusion Matrix.
+
+---
+
+## Per riprodurre progetto:
+
+1. Clonare la repository:
+ 
+   git clone [https://github.com/IL_TUO_USERNAME/network-anomaly-detection.git](https://github.com/IL_TUO_USERNAME/network-anomaly-detection.git)
+   cd network-anomaly-detection

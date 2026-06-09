@@ -1,0 +1,52 @@
+Questo documento elenca tutti i comandi utilizzati per gestire l'ambiente di lavoro e implementare il modello di Machine Learning.
+
+1. Setup dell'Ambiente
+Installazione delle dipendenze necessarie per la manipolazione dei dati, l'addestramento del modello e la visualizzazione dei risultati.
+# Installazione delle librerie fondamentali
+pip install numpy pandas scikit-learn seaborn matplotlib joblib requests
+2. Download e Gestione Dataset
+Script per il recupero automatico del dataset NSL-KDD e la sua preparazione locale.
+
+Python
+# Download e estrazione del dataset (da eseguire in Python)
+import requests, zipfile, io
+url = "https://academy.hackthebox.com/storage/modules/292/KDD_dataset.zip"
+response = requests.get(url)
+z = zipfile.ZipFile(io.BytesIO(response.content))
+z.extractall('.')
+3. Caricamento e Manipolazione Dati
+Comandi per leggere il file grezzo e preparare il DataFrame (eseguito all'interno dello script principale).
+
+Python
+# Caricamento del dataset in Pandas con i nomi colonna definiti
+df = pd.read_csv('KDD+.txt', names=columns)
+
+# Visualizzazione iniziale della struttura dati
+print(df.head())
+4. Addestramento del Modello
+Comando per avviare il processo di apprendimento del Random Forest utilizzando il dataset preparato.
+
+Python
+# Inizializzazione e fitting del modello multi-classe
+rf_model_multi = RandomForestClassifier(random_state=1337)
+rf_model_multi.fit(multi_train_X, multi_train_y)
+5. Valutazione delle Performance
+Comandi utilizzati per generare le metriche di accuratezza e visualizzare la Confusion Matrix.
+
+Python
+# Predizioni sul set di validazione
+multi_predictions = rf_model_multi.predict(multi_val_X)
+
+# Calcolo delle metriche (Accuracy, Precision, Recall, F1-Score)
+print(classification_report(multi_val_y, multi_predictions, target_names=class_labels))
+
+# Generazione della Confusion Matrix (heatmap)
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=class_labels, yticklabels=class_labels)
+plt.show()
+6. Salvataggio del Modello
+Comando per esportare il modello addestrato in un file persistente, permettendone il riutilizzo futuro.
+
+Python
+# Salvataggio del modello su file locale tramite joblib
+import joblib
+joblib.dump(rf_model_multi, 'network_anomaly_detection_model.joblib')
