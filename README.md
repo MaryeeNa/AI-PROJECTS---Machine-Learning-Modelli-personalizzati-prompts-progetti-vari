@@ -70,8 +70,6 @@ new_data_processed = [preprocess_message(msg) for msg in new_messages]
 predictions = loaded_model.predict(new_data_processed)
 print(predictions) # 1 se è spam, 0 se è ham
 
-Ecco una proposta per il file `README.md` del tuo repository GitHub. È stato strutturato seguendo lo stile, il tono e la formattazione dell'esempio che hai fornito, integrando in modo fluido e organizzato tutti i progetti estratti dai file di testo.
-
 ---
 
 ---
