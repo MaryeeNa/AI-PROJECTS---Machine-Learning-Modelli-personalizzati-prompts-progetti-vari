@@ -80,6 +80,9 @@ Ecco una proposta per il file `README.md` del tuo repository GitHub. È stato st
 
 Una vera e propria "bibbia" e dashboard personale sviluppata per visualizzare il mio curriculum di studio, tenere traccia dei progressi quotidiani e avere un accesso rapido agli strumenti operativi e alle guide completate.
 
+<img width="938" height="826" alt="image" src="https://github.com/user-attachments/assets/36e668ce-9891-429c-a1fd-f1fdc745572a" />
+
+
 ### Strumenti utilizzati
 
 * 
@@ -99,16 +102,21 @@ Una vera e propria "bibbia" e dashboard personale sviluppata per visualizzare il
 
 * 
 **Curriculum Tracker:** Roadmap suddivisa in moduli per monitorare il completamento delle attività quotidiane con una *Progress Bar* visiva per i progressi settimanali.
+<img width="869" height="418" alt="image" src="https://github.com/user-attachments/assets/e9a6571a-8d2b-48f3-bc4e-583bdb0d8a82" />
 
 
 * 
 **Arsenal:** Sezione dedicata alla collezione di tool e strumenti di sicurezza in fase di apprendimento.
+<img width="920" height="926" alt="image" src="https://github.com/user-attachments/assets/eaada930-09d8-4e67-b772-4de1ba61705e" />
 
 
 * 
 **Guide dinamiche:** Sistema di card filtrabili per livello per consultare rapidamente appunti e tutorial.
 
+<img width="1978" height="1190" alt="Senza titolo" src="https://github.com/user-attachments/assets/f28ead94-2714-481b-94fd-110edcf012fd" />
+<img width="800" height="878" alt="image" src="https://github.com/user-attachments/assets/6ba7e8a1-3415-4bc5-b9a0-772a30d89757" />
 
+<img width="908" height="865" alt="image" src="https://github.com/user-attachments/assets/271c624f-df8b-48bb-8b8e-bdc693a83d45" />
 
 ### Come usarlo
 
