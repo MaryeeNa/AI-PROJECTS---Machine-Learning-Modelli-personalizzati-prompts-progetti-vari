@@ -83,33 +83,27 @@ Una vera e propria "bibbia" e dashboard personale sviluppata per visualizzare il
 
 ### Strumenti utilizzati
 
-* 
-**HTML5 & CSS3:** Struttura della pagina e design "dark mode" (void/dark) con palette neon per ridurre l'affaticamento visivo durante le sessioni notturne.
+* **HTML5 & CSS3:** Struttura della pagina e design "dark mode" (void/dark) con palette neon per ridurre l'affaticamento visivo durante le sessioni notturne.
 
 
-* 
-**Vanilla JavaScript:** Logica di rendering dinamico delle card, gestione delle animazioni e filtri delle guide.
+* **Vanilla JavaScript:** Logica di rendering dinamico delle card, gestione delle animazioni e filtri delle guide.
 
 
-* 
-**Prompt Engineering (AI Co-creation):** Strutturazione logica, pianificazione e debug realizzati in sinergia con **Gemini** (struttura e debug JS), **Claude** (rifinitura CSS) e **Antigravity** (automazione script).
+* **Prompt Engineering (AI Co-creation):** Strutturazione logica, pianificazione e debug realizzati in sinergia con **Gemini** (struttura e debug JS), **Claude** (rifinitura CSS) e **Antigravity** (automazione script).
 
 
 
 ### Funzionalità principali
 
-* 
-**Curriculum Tracker:** Roadmap suddivisa in moduli per monitorare il completamento delle attività quotidiane con una *Progress Bar* visiva per i progressi settimanali.
+* **Curriculum Tracker:** Roadmap suddivisa in moduli per monitorare il completamento delle attività quotidiane con una *Progress Bar* visiva per i progressi settimanali.
 <img width="869" height="418" alt="image" src="https://github.com/user-attachments/assets/e9a6571a-8d2b-48f3-bc4e-583bdb0d8a82" />
 
 
-* 
-**Arsenal:** Sezione dedicata alla collezione di tool e strumenti di sicurezza in fase di apprendimento.
+* **Arsenal:** Sezione dedicata alla collezione di tool e strumenti di sicurezza in fase di apprendimento.
 <img width="920" height="926" alt="image" src="https://github.com/user-attachments/assets/eaada930-09d8-4e67-b772-4de1ba61705e" />
 
 
-* 
-**Guide dinamiche:** Sistema di card filtrabili per livello per consultare rapidamente appunti e tutorial.
+* **Guide dinamiche:** Sistema di card filtrabili per livello per consultare rapidamente appunti e tutorial.
 
 <img width="1978" height="1190" alt="Senza titolo" src="https://github.com/user-attachments/assets/f28ead94-2714-481b-94fd-110edcf012fd" />
 <img width="800" height="878" alt="image" src="https://github.com/user-attachments/assets/6ba7e8a1-3415-4bc5-b9a0-772a30d89757" />
@@ -128,24 +122,19 @@ Questo progetto affronta il problema dell'identificazione di attività malevole 
 
 ### Strumenti utilizzati
 
-* 
-**Python 3** (per l'intera pipeline di sviluppo) 
+* **Python 3** (per l'intera pipeline di sviluppo) 
 
 
-* 
-**Pandas & NumPy** (per il download, la manipolazione e il preprocessing del dataset) 
+* **Pandas & NumPy** (per il download, la manipolazione e il preprocessing del dataset) 
 
 
-* 
-**Scikit-Learn** (per il data splitting, l'addestramento del Random Forest e il calcolo delle metriche di valutazione) 
+* **Scikit-Learn** (per il data splitting, l'addestramento del Random Forest e il calcolo delle metriche di valutazione) 
 
 
-* 
-**Seaborn & Matplotlib** (per la generazione di grafici e della heatmap per la Confusion Matrix) 
+* **Seaborn & Matplotlib** (per la generazione di grafici e della heatmap per la Confusion Matrix) 
 
 
-* 
-**Joblib** (per il salvataggio e la persistenza del modello addestrato) 
+* **Joblib** (per il salvataggio e la persistenza del modello addestrato) 
 
 
 
@@ -163,8 +152,7 @@ Questo progetto affronta il problema dell'identificazione di attività malevole 
 * Creazione di un target multi-classe raggruppando decine di signature in 4 macro-categorie: **DoS** (1), **Probe** (2), **Privilege Escalation** (3) e **Access** (4).
 
 
-* 
-**One-Hot Encoding** delle variabili testuali (es. `protocol_type`) tramite `pd.get_dummies` e unione con le metriche numeriche.
+* **One-Hot Encoding** delle variabili testuali (es. `protocol_type`) tramite `pd.get_dummies` e unione con le metriche numeriche.
 
 
 
