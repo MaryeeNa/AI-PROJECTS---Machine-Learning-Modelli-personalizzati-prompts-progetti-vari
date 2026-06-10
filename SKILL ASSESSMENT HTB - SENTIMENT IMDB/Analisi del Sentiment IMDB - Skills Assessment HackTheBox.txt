@@ -58,3 +58,19 @@ pipeline.fit(X_train, y_train)
 joblib.dump(pipeline, 'htb_pipeline_model.pkl')
 
 print("[SUCCESSO] Pipeline completa generata e salvata! Carica questo file sulla piattaforma.")
+
+TESTANDO IL MODELLO:
+
+import pandas as pd
+
+# Inseriamo i risultati precedenti in un DataFrame
+results_df = pd.DataFrame({
+    'Recensione Analizzata': custom_reviews,
+    'Label': predictions,
+    'Sentiment': ["Positivo" if p == 1 else "Negativo" for p in predictions]
+})
+
+# In JupyterLab, chiamare direttamente il DataFrame (o usare display) 
+# genera una tabella formattata in modo elegante
+results_df
+
