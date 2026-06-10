@@ -1,0 +1,61 @@
+# Analisi del Sentiment IMDB - Skills Assessment HackTheBox
+
+## 🎯 L'Obiettivo
+L'obiettivo di questa valutazione era addestrare un modello di classificazione di Machine Learning in grado di prevedere il sentiment delle recensioni di film dal dataset IMDB. Il modello doveva classificare accuratamente le recensioni come **Positive (1)** o **Negative (0)** ed essere caricato come file `.pkl` serializzato sul server di valutazione di HackTheBox.
+
+## 🧗‍♂️ Il Percorso e gli Ostacoli
+
+Questa sfida si è rivelata non solo un esercizio di Natural Language Processing (Elaborazione del Linguaggio Naturale), ma un vero e proprio reverse-engineering di un sistema di valutazione "black-box" (scatola nera). Ecco il riepilogo del percorso:
+
+### Fase 1: Il Colpo di Scena del JSON
+L'ipotesi iniziale era che il dataset sarebbe stato fornito come un file standard `.csv`. Tuttavia, i file estratti si sono rivelati essere `train.json` e `test.json`. Questo ha richiesto un cambio di rotta nella nostra pipeline di acquisizione dati, passando dal classico `pandas.read_csv()` a `pandas.read_json()`, per estrarre correttamente i campi annidati `text` e `label`.
+
+### Fase 2: L'Anomalia dello 0.0% di Accuratezza (L'Illusione dell'Inversione)
+Dopo aver addestrato con successo un modello standard `TfidfVectorizer` + `LogisticRegression` con eccellenti metriche di accuratezza locale (circa l'89%), il caricamento del modello sulla piattaforma HTB ha prodotto uno sconcertante **punteggio di 0.0**. 
+* **L'Indizio:** La matrice di confusione mostrava una diagonale perfetta (12 Veri Positivi, 13 Veri Negativi), il che significava che il modello prevedeva correttamente al 100%, eppure falliva la valutazione.
+* **Il Tentativo:** Inizialmente ho pensato che il server si aspettasse etichette invertite (0 per Positivo, 1 per Negativo). Ho tentato di forzare esplicitamente le mappature delle etichette, alterare la struttura dell'array `model.classes_` e persino scrivere una classe wrapper personalizzata per intercettare e invertire gli output di `.predict()`. Niente ha funzionato.
+
+### Fase 3: Il Segreto della Piattaforma (La Rivelazione della Pipeline)
+Il vero problema non era una logica di matrice invertita, ma un **crash silenzioso del server**. 
+Caricando un modello `LogisticRegression` puro, il backend di HTB passava stringhe di testo grezzo e non strutturato (es. *"Questo film è stato fantastico"*) direttamente al file `.pkl`. Poiché il modello standard si aspetta valori numerici (float) vettorizzati, lanciava un'eccezione fatale. La piattaforma intercettava questo crash, assegnava un punteggio predefinito di `0.0` e mostrava una matrice di confusione bloccata su valori preimpostati (placeholder).
+
+## 🚀 La Soluzione Finale
+Per colmare il divario tra il testo grezzo fornito dal server e il modello matematico, ho utilizzato una **`Pipeline` di Scikit-Learn**. 
+
+Confezionando sia il `TfidfVectorizer` (per gestire la pulizia automatica del testo e l'estrazione delle feature) sia il classificatore `LogisticRegression` in un unico file `.pkl` serializzato, il server ha potuto passare in sicurezza il testo grezzo direttamente alla pipeline. Il vettorizzatore ha trasformato il testo al volo, ha passato i valori numerici al modello e ha restituito le previsioni corrette. 
+
+**Lezione Imparata:** Quando si distribuiscono modelli NLP su sistemi backend ciechi, bisogna sempre unire i livelli di pre-elaborazione (preprocessing) e classificazione in un'unica Pipeline unificata!
+
+
+
+import joblib
+import pandas as pd
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+
+# --- 1. Caricamento dei Dati ---
+# Il dataset è in formato JSON
+df_train = pd.read_json("train.json")
+
+# Estrazione del testo grezzo e delle etichette (0 = Negativo, 1 = Positivo)
+X_train = df_train['text']
+y_train = df_train['label']
+
+# --- 2. Creazione della Pipeline ---
+# Questo è il passaggio fondamentale! Unisce in modo permanente il vettorizzatore 
+# e il classificatore in un'unica entità distribuibile che il server HTB può elaborare in sicurezza.
+pipeline = Pipeline([
+    ("vectorizer", TfidfVectorizer(sublinear_tf=True, ngram_range=(1, 2), max_features=50000)),
+    ("classifier", LogisticRegression(C=1.0, max_iter=1000))
+])
+
+# --- 3. Addestramento della Pipeline ---
+# Addestriamo il modello direttamente sulle stringhe di testo grezzo!
+pipeline.fit(X_train, y_train)
+
+# --- 4. Salvataggio del File Distribuibile ---
+# Salvataggio dell'intera pipeline in un file .pkl
+joblib.dump(pipeline, 'htb_pipeline_model.pkl')
+
+print("[SUCCESSO] Pipeline completa generata e salvata! Carica questo file sulla piattaforma.")
