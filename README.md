@@ -98,14 +98,19 @@ Una vera e propria "bibbia" e dashboard personale sviluppata per visualizzare il
 ### Funzionalità principali
 
 * **Curriculum Tracker:** Roadmap suddivisa in moduli per monitorare il completamento delle attività quotidiane con una *Progress Bar* visiva per i progressi settimanali.
+
+
 <img width="869" height="418" alt="image" src="https://github.com/user-attachments/assets/e9a6571a-8d2b-48f3-bc4e-583bdb0d8a82" />
 
 
 * **Arsenal:** Sezione dedicata alla collezione di tool e strumenti di sicurezza in fase di apprendimento.
+
+
 <img width="920" height="926" alt="image" src="https://github.com/user-attachments/assets/eaada930-09d8-4e67-b772-4de1ba61705e" />
 
 
 * **Guide dinamiche:** Sistema di card filtrabili per livello per consultare rapidamente appunti e tutorial.
+
 
 <img width="1978" height="1190" alt="Senza titolo" src="https://github.com/user-attachments/assets/f28ead94-2714-481b-94fd-110edcf012fd" />
 <img width="800" height="878" alt="image" src="https://github.com/user-attachments/assets/6ba7e8a1-3415-4bc5-b9a0-772a30d89757" />
@@ -247,15 +252,15 @@ riducendo l'addestramento a pochi minuti sul mio hardware.
 Nello sviluppo del codice ho seguito una pipeline logica per capire come i dati 
 vengono trasformati e digeriti da PyTorch:
 
-[FASE 1] Analisi esplorativa dello sbilanciamento delle classi nel dataset compresso.
-[FASE 2] Scrittura di una classe Dataset personalizzata per evitare l'estrazione.
-[FASE 3] Pipeline di Preprocessing (Resize a 75x75, conversione in Tensor e 
+* [FASE 1] Analisi esplorativa dello sbilanciamento delle classi nel dataset compresso.
+* [FASE 2] Scrittura di una classe Dataset personalizzata per evitare l'estrazione.
+* [FASE 3] Pipeline di Preprocessing (Resize a 75x75, conversione in Tensor e 
          normalizzazione standard ImageNet per far funzionare ResNet50).
-[FASE 4] Splitting dei dati: 80% per far studiare il modello (Train) e 20% per 
+* [FASE 4] Splitting dei dati: 80% per far studiare il modello (Train) e 20% per 
          interrogarlo alla fine su dati totalmente nuovi (Test).
-[FASE 5] Configurazione dei DataLoader per mandare le immagini al modello in "batch".
-[FASE 6] Definizione della rete MalwareClassifier importando ResNet50 da torchvision.
-[FASE 7] Ciclo di addestramento (10 epoche) con calcolo manuale di Loss (CrossEntropy) 
+* [FASE 5] Configurazione dei DataLoader per mandare le immagini al modello in "batch".
+* [FASE 6] Definizione della rete MalwareClassifier importando ResNet50 da torchvision.
+* [FASE 7] Ciclo di addestramento (10 epoche) con calcolo manuale di Loss (CrossEntropy) 
          e ottimizzatore Adam.
-[FASE 8] Esportazione e salvataggio del modello finito in formato "malware_classifier.pth".
-[FASE 9] Analisi finale dei risultati con generazione delle curve di apprendimento.
+* [FASE 8] Esportazione e salvataggio del modello finito in formato "malware_classifier.pth".
+* [FASE 9] Analisi finale dei risultati con generazione delle curve di apprendimento.
