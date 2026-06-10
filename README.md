@@ -3,8 +3,9 @@
 Questo repository funge da mio blocco note e hub personale per tracciare i progressi nello studio del Machine Learning applicato alla Cybersecurity e nella gestione del mio percorso formativo. I progetti inclusi spaziano dallo sviluppo di interfacce web per il tracciamento dello studio all'implementazione di modelli di intelligenza artificiale per il rilevamento di intrusioni informatiche.
 
 -------------------------------------------
-
+================================================================================
 ## 1. NLP SPAM CLASSIFIER con NAIVE BAYES
+================================================================================
 
 I messaggi di spam e i tentativi di phishing sono ormai all'ordine del giorno. Ho voluto capire come funzionano i filtri automatici creando una pipeline che:
 1. Prende un testo grezzo e lo pulisce.
@@ -73,8 +74,9 @@ print(predictions) # 1 se è spam, 0 se è ham
 ---
 
 ---
-
+================================================================================
 ## 2. CyberML Academy — Dashboard di Studio
+================================================================================
 
 Una vera e propria "bibbia" e dashboard personale sviluppata per visualizzare il mio curriculum di studio, tenere traccia dei progressi quotidiani e avere un accesso rapido agli strumenti operativi e alle guide completate.
 
@@ -115,8 +117,9 @@ Una vera e propria "bibbia" e dashboard personale sviluppata per visualizzare il
 Essendo un progetto frontend statico, basta clonare il repository e aprire direttamente il file `index.html` nel browser (Chrome, Firefox, ecc.). Per aggiungere nuovi elementi, è sufficiente aggiornare gli array JavaScript o modificare il file HTML.
 
 ---
-
+================================================================================
 ## 3. Network Anomaly Detection using Random Forest
+================================================================================
 
 Questo progetto affronta il problema dell'identificazione di attività malevole o intrusioni analizzando le caratteristiche del traffico di rete tramite un algoritmo di ensemble (**Random Forest**) basato su molteplici alberi decisionali.
 
@@ -213,4 +216,46 @@ joblib.dump(rf_model_multi, 'network_anomaly_detection_model.joblib')
 
 ```
 
+================================================================================
+ ## CLASSIFICAZIONE MALWARE CON CNN e architettura ResNet50
+================================================================================
 
+## 1. INTRODUZIONE E OBIETTIVO DEL PROGETTO
+--------------------------------------------------------------------------------
+Questo progetto nasce come studio indipendente e sperimentazione pratica sulle reti 
+neurali convoluzionali (CNN) applicate alla cybersecurity. L'obiettivo è capire 
+se sia possibile classificare famiglie di malware trattando i file eseguibili (.exe) 
+non come codice da analizzare (analisi statica/dinamica classica), ma come immagini.
+
+Il concetto alla base è affascinante: convertendo i byte di un binario in pixel 
+(valori da 0 a 255), ogni file diventa un'immagine in scala di grigi. Famiglie di 
+malware simili tendono a mostrare texture visive e pattern ricorrenti molto chiari.
+
+
+Per l'esperimento ho usato il celebre "Malimg Dataset" (9.339 immagini, 25 classi).
+Trattandosi di un laboratorio casalingo, per evitare tempi di addestramento di 
+giorni, ho implementato il Transfer Learning sfruttando la rete pre-addestrata 
+ResNet50. Ho congelato tutti i parametri interni (Feature Freezing) e ho modificato 
+solo l'ultimo livello della rete (Fully Connected) per adattarlo alle mie 25 classi, 
+riducendo l'addestramento a pochi minuti sul mio hardware.
+<img width="797" height="816" alt="image" src="https://github.com/user-attachments/assets/ecfd19d5-f413-4a8b-9436-9503af62ec92" />
+<img width="642" height="638" alt="image" src="https://github.com/user-attachments/assets/59e84c91-1b28-443c-b4ef-bdb79491aec1" />
+<img width="696" height="841" alt="image" src="https://github.com/user-attachments/assets/c2ffa80e-204f-4501-b8d1-a8ac0c0585f5" />
+
+## 2. LA SCALETTA OPERATIVA: COMPRENSIONE PASSO-PASSO
+--------------------------------------------------------------------------------
+Nello sviluppo del codice ho seguito una pipeline logica per capire come i dati 
+vengono trasformati e digeriti da PyTorch:
+
+[FASE 1] Analisi esplorativa dello sbilanciamento delle classi nel dataset compresso.
+[FASE 2] Scrittura di una classe Dataset personalizzata per evitare l'estrazione.
+[FASE 3] Pipeline di Preprocessing (Resize a 75x75, conversione in Tensor e 
+         normalizzazione standard ImageNet per far funzionare ResNet50).
+[FASE 4] Splitting dei dati: 80% per far studiare il modello (Train) e 20% per 
+         interrogarlo alla fine su dati totalmente nuovi (Test).
+[FASE 5] Configurazione dei DataLoader per mandare le immagini al modello in "batch".
+[FASE 6] Definizione della rete MalwareClassifier importando ResNet50 da torchvision.
+[FASE 7] Ciclo di addestramento (10 epoche) con calcolo manuale di Loss (CrossEntropy) 
+         e ottimizzatore Adam.
+[FASE 8] Esportazione e salvataggio del modello finito in formato "malware_classifier.pth".
+[FASE 9] Analisi finale dei risultati con generazione delle curve di apprendimento.
